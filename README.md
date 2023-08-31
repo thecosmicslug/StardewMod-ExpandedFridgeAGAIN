@@ -1,15 +1,20 @@
 # ExpandedFridge  + bugfixes
-- This project was forked from [https://github.com/Uwazouri/ExpandedFridge] and so far contains the UI Scale bugix from SampaioTS.
-- Eventually looking to add Ginger island support and compatibility with 'Better Chests'.
-- I work in visual studio code on linux, to build on other platforms may well need adjustments.
+This project was forked from [https://github.com/Uwazouri/ExpandedFridge] and so far contains the UI Scale bugix from SampaioTS.
+
+Eventually looking to add Ginger island support and compatibility with 'Better Chests'.
+
+I work in visual studio code on linux, to build on other platforms may well need adjustments.
 
 ## Managing Mini Fridges
-- Access mini fridges through the kitchen fridge using inventory tabs.
-- Simply place mini fridges in a farm house or cabin with a kitchen and they will be accessible from the kitchen fridge.
-- The next day you will find your placed mini fridges moved away from your living space.
-- (They are placed in the first found free tiles within the house when the day ends so if the mod stops working you should still have your stuff!)
+Access mini fridges through the kitchen fridge using inventory tabs.
 
--   It should also work in multiplayer.
+Simply place mini fridges in a farm house or cabin with a kitchen and they will be accessible from the kitchen fridge.
+
+The next day you will find your placed mini fridges moved away from your living space.
+
+(They are placed in the first found free tiles within the house when the day ends so if the mod stops working you should still have your stuff!)
+
+It should also work in multiplayer.
 
 ## Requirements:
 - SMAPI 3.18+
