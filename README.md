@@ -16,24 +16,31 @@ The next day you will find your placed mini fridges moved away from your living 
 
 It should also work in multiplayer.
 
+
 ## Requirements:
 - SMAPI 3.18+
 - Stardew Valley 1.5+
 
+
 ## In-Game Instructions:
-- Place mini fridges inside a farm house or cabin with a kitchen.
-- Open the kitchen fridge to access any mini fridges in the location.
-- Use inventory tabs, mouse scroll wheel or game-pad shoulder triggers to switch between inventory pages (mini fridges).
-- (Optional) All mini fridges are moved in and out of the map bounds when day has started/before ending (on by default).
-- (Optional) Edit the "config.json" file in the "ExpandedFridge" folder to set hotkeys or hide mini fridges option.
-- (for keybindings and regarding the config file, see https://stardewvalleywiki.com/Modding:Player_Guide/Key_Bindings)
+Place mini fridges inside a farm house or cabin with a kitchen.
+
+Open the kitchen fridge to access any mini fridges in the location.
+
+Use inventory tabs, mouse scroll wheel or game-pad shoulder triggers to switch between inventory pages (mini fridges).
+
+(Optional) All mini fridges are moved in and out of the map bounds when day has started/before ending (on by default).
+
+(Optional) Edit the "config.json" file in the "ExpandedFridge" folder to set hotkeys or hide mini fridges option.
+
+(for keybindings and regarding the config file, see https://stardewvalleywiki.com/Modding:Player_Guide/Key_Bindings)
 
 
 ## Install Instructions:
 - Download and extract the "Expanded Fridge Files" zip file into a new folder.
 - Copy the "ExpandedFridge" folder from the new folder into your Stardew Valley mods folder.
 - Done!
-- 
+
 
 ## Uninstall Instructions:
 - Go to your Stardew Valley mods folder.
@@ -59,3 +66,4 @@ It should also work in multiplayer.
 - 1.2.1 ﻿- Clicking and opening/closing now has sounds.
 - 1.2.0 ﻿- Reworked menu manipulation. Should be more stable and work better with Chests Anywhere.
 - 1.1.0  ﻿- Right clicking now works.
+
