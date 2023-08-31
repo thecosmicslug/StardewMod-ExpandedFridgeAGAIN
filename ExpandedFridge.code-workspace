@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"todo-tree.general.enableFileWatcher": true,
+		"todo-tree.general.statusBar": "total",
+		"todo-tree.tree.scanMode": "workspace",
+		"files.exclude": {
+            "bin": true,
+			"obj": true,
+			"build.sh": true,
+            "ExpandedFridge.code-workspace": true,
+            ".gitignore": true
+        }
+	}
+}
+
