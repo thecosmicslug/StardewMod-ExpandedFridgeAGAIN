@@ -431,7 +431,7 @@ namespace ExpandedFridge
                 foreach (ClickableComponent tab in this.chestTabs)
                 {
                     int width = Game1.tileSize / 2;
-                    int height = width * 2;
+                    int height = width;
 
                     IClickableMenu.drawTextureBox(b, Game1.menuTexture, new Rectangle(0, 256, 60, 60), tab.bounds.X, tab.bounds.Y, tab.bounds.Width, tab.bounds.Height, Color.White, 1, false);
                     Color tabCol = this.chestTabsColors[i++];
