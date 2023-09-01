@@ -1,5 +1,5 @@
 # ExpandedFridge  + bugfixes
-This project was forked from [https://github.com/Uwazouri/ExpandedFridge] and so far contains the UI Scale bugix from SampaioTS.
+This project was forked from [https://github.com/Uwazouri/ExpandedFridge] and so far contains the UI Scale bugix from 'SampaioTS' and GenericModConfigMenu support.
 
 Eventually looking to add Ginger island support and compatibility with 'Better Chests'.
 
