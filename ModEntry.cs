@@ -8,6 +8,7 @@ using StardewValley;
 using System;
 using System.Collections.Generic;
 using StardewModdingAPI;
+using StardewModdingAPI.Events;
 
 
 namespace ExpandedFridge
@@ -26,9 +27,31 @@ namespace ExpandedFridge
         {
             _instance = this;
             _instanceInitiated = true;
-            
-            Config = helper.ReadConfig<ModConfig>();
+
+            //* Prepare GenericModConfigMenu
+            Helper.Events.GameLoop.GameLaunched += onLaunched;
+
+            //* Start Manager
             Manager = new Manager(this);
+        }
+
+         //* Setup for GenericModConfigMenu
+        private void onLaunched(object sender, GameLaunchedEventArgs e)
+        {
+
+            //* Load Config
+            Config = Helper.ReadConfig<ModConfig>();
+
+            //* Now Setup GenericModConfigMenu support
+            var api = Helper.ModRegistry.GetApi<GenericModConfigMenuAPI>("spacechase0.GenericModConfigMenu");
+            api.RegisterModConfig(ModManifest, () => Config = new ModConfig(), () => Helper.WriteConfig(Config));
+
+            //* Our Options
+            api.SetDefaultIngameOptinValue( ModManifest, true );
+            api.RegisterSimpleOption(ModManifest, "HideMiniFridges", "Hide the mini-fridges.", () => Config.HideMiniFridges, (bool val) => Config.HideMiniFridges = val);
+            api.RegisterSimpleOption(ModManifest, "NextFridgeTabButton", "Button to navigate to next tab.", () => Config.NextFridgeTabButton, (SButton val) => Config.NextFridgeTabButton = val);
+            api.RegisterSimpleOption(ModManifest, "LastFridgeTabButton", "Button to navigate to previous tab.", () => Config.LastFridgeTabButton, (SButton val) => Config.LastFridgeTabButton = val);
+
         }
 
         //* Prints message in console log with given log level.
