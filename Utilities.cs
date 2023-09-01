@@ -11,47 +11,44 @@ using Microsoft.Xna.Framework;
 
 namespace ExpandedFridge
 {
-    /// <summary>
-    /// Collections of static methods and variables.
-    /// </summary>
+    //* Collections of static methods and variables.
     class Utilities
     {
-        /// Sheet index for mini fridges.
         public const int MiniFridgeSheetIndex = 216;
-
-        /// Start tile for placement out of bounds.
         public const int OutOfBoundsTileY = -300;
 
-        /// Wrapper for getting players current location.
+        //* Wrapper for getting players current location.
         public static GameLocation CurrentLocation { get { return Game1.player.currentLocation; } }
         
-        /// Checks if a location has a fridge.
+        //* Checks if a location has a fridge.
+        //TODO: Add Ginger island support here.
         public static bool IsFridgeInLocation(GameLocation location)
         {
             return ((location is FarmHouse) && (location as FarmHouse).upgradeLevel > 0);
         }
 
-        /// Is a given tile within the map bounds of the given location.
+        //* Is a given tile within the map bounds of the given location.
         public static bool IsPointInsideMapBounds(Point point, GameLocation location)
         {
             return location.isTileOnMap(point.X, point.Y);
         }
 
-        /// Wrapper for checking point inside map bounds.
+        //* Wrapper for checking point inside map bounds.
         public static bool IsPointInsideMapBounds(Vector2 point, GameLocation location)
         {
             return location.isTileOnMap(point);
         }
 
-        /// Is given object a mini fridge.
+        //* Is given object a mini fridge.
         public static bool IsObjectMiniFridge(StardewValley.Object obj)
         {
             return (obj != null && obj.bigCraftable.Value && (obj is Chest && obj.ParentSheetIndex == MiniFridgeSheetIndex));
         }
 
-        /// Get an array of all locations that have fridges.
-        /// Note:   If not on Master Game it could miss locations with fridges.
-        ///         Must use request locations or other way to ensure all locations on remote players.
+        //* Get an array of all locations that have fridges.
+        //WARNING: If not on Master Game it could miss locations with fridges.
+        //* Must use request locations or other way to ensure all locations on remote players.
+        //TODO: Add Ginger island support here?
         public static FarmHouse[] GetAllFridgeHouses()
         {
             List<FarmHouse> fridgeLocations = new List<FarmHouse>();
@@ -75,14 +72,14 @@ namespace ExpandedFridge
             return fridgeLocations.ToArray();
         }
         
-        /// Get an array of mini fridge chests that exists in given location. They are sorted by their tile coordinates with Y as higher priority.
+        //* Get an array of mini fridge chests that exists in given location. They are sorted by their tile coordinates with Y as higher priority.
         public static Chest[] GetAllMiniFridgesInLocation(GameLocation location)
         {
             List<Chest> miniFridges = new List<Chest>();
             SortedDictionary<Vector2, Chest> miniFridgeDictionary = new SortedDictionary<Vector2, Chest>(
                 Comparer<Vector2>.Create((v1, v2) => v1 == v2 ? 0 : v1.Y > v2.Y ? 1 : (v1.Y == v2.Y && v1.X > v2.X) ? 1 : -1));
 
-            // find all chests in location of mini fridge index
+            //* find all chests in location of mini fridge index
             foreach (var p in location.objects.Pairs)
                 if (IsObjectMiniFridge(p.Value))
                     miniFridgeDictionary.Add(p.Key, p.Value as Chest);
@@ -93,8 +90,8 @@ namespace ExpandedFridge
             return miniFridges.ToArray();
         }
         
-        /// Get a free tile for chest placement in a location.
-        /// NOTE: This can return a value outside the map bounds.
+        //* Get a free tile for chest placement in a location.
+        //WARNING: This can return a value outside the map bounds.
         public static Point GetFreeTileInLocation(GameLocation location)
         {
             for (int h = 0; h <= location.map.Layers[0].LayerHeight; h++)//(int h = location.map.Layers[0].LayerHeight; h >= 0; h--)
@@ -106,24 +103,24 @@ namespace ExpandedFridge
             int y = 0;
             int x = 0;
 
-            // move in y direction untill no other potential offmap objects are there
+            //* move in y direction untill no other potential offmap objects are there
             while (location.isObjectAtTile(x, y))
                 y++;
 
             ModEntry.DebugLog("Warning, object might become placed out of bounds at tile x:" + x + ", y:" + y + " in location: " + location.Name, StardewModdingAPI.LogLevel.Warn);
 
-            // return that position
+            //* return that position
             return new Point(x, y);
         }
 
-        /// As GetFreeTileInLocation but returns Vector2 instead.
+        //* As GetFreeTileInLocation but returns Vector2 instead.
         public static Vector2 GetFreeTileVectorInLocation(GameLocation location)
         {
             var p = GetFreeTileInLocation(location);
             return new Vector2(p.X, p.Y);
         }
 
-        /// Creates a new inventory menu from a chest with option for showing the color picker.
+        //* Creates a new inventory menu from a chest with option for showing the color picker.
         public static ItemGrabMenu GetNewItemGrabMenuFromChest(Chest chest, bool showColorPicker)
         {
             var igm = new ItemGrabMenu((IList<Item>)chest.items, false, true, new
@@ -145,7 +142,7 @@ namespace ExpandedFridge
             return igm;
         }
 
-        /// Moves all mini fridges in all farmhouses out of the map bounds.
+        //* Moves all mini fridges in all farmhouses out of the map bounds.
         public static void MoveMiniFridgesOutOfMapBounds()
         {
             foreach (var h in GetAllFridgeHouses())
@@ -185,7 +182,7 @@ namespace ExpandedFridge
             }
         }
 
-        /// Moves all mini fridges in all farmhouses into map bounds.
+        //* Moves all mini fridges in all farmhouses into map bounds.
         public static void MoveMiniFridgesIntoMapBounds()
         {
             foreach (var h in GetAllFridgeHouses())

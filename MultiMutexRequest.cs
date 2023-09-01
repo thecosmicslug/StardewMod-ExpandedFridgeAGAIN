@@ -6,9 +6,7 @@ using StardewValley.Network;
 
 namespace ExpandedFridge
 {
-    /// <summary>
-    /// Manages multiple mutex request like StardewValley does internally.
-    /// </summary>
+    //* Manages multiple mutex request like StardewValley does internally.
     public class MultiMutexRequest
     {
         private int _reportedCount;

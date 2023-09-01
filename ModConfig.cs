@@ -3,9 +3,8 @@
 
 namespace ExpandedFridge
 {
-    /// <summary>
-    /// Stores options for the Manager.
-    /// </summary>
+    //* Stores options for the Manager.
+    //TODO: Add GenericModConfigMenu support.
     public class ModConfig
     {
         public bool HideMiniFridges { get; set; } = true;

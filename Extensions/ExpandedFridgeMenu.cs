@@ -1,38 +1,30 @@
-﻿// Deprecated, will be removed in future commit
-
-//#define OLD_CODE
-
-#if OLD_CODE
-
+﻿#if OLD_CODE
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Netcode;
 using StardewValley.Objects;
 using StardewValley.Menus;
+
 using StardewValley;
 using System;
 using System.Collections.Generic;
 
 namespace ExpandedFridge
 {
-    /// <summary>
-    /// This menu is just a stripped down version of an ItemGrabMenu.
-    /// The main difference is that we use our extended fridge as a guide to what inventories we display and how items are transfered.
-    /// We also do some extra mutex callbacks when the menu is closed if the fridge was accessed remotely.
-    /// </summary>
+    //* This menu is just a stripped down version of an ItemGrabMenu.
+    //* The main difference is that we use our extended fridge as a guide to what inventories we display and how items are transfered.
+    //* We also do some extra mutex callbacks when the menu is closed if the fridge was accessed remotely.
     class ExpandedFridgeMenu : MenuWithInventory
     {
-        /// Lists of chest tabs and their colors.
+ 
         private List<ClickableComponent> chestTabs = new List<ClickableComponent>();
         private List<Color> chestTabsColors = new List<Color>();
 
-        /// Variables for the selected chest tab.
         private ClickableComponent selectedTab;
         private Color selectedTabColor;
         private int selectedTabIndex = 0;
 
-        /// Some constant offsets for adjusting positions of components.
         private const float textOffsetX = Game1.tileSize * 0.35F;
         private const float textOffsetY = Game1.tileSize * 0.38F;
         private const float textOffsetYSelected = Game1.tileSize * 0.25F;
@@ -42,10 +34,7 @@ namespace ExpandedFridge
         private const float colorSizeModY = 0.65F;
         private const float colorSizeModX = 0.625F;
 
-        /// The fridge hub this menu is connected to.
         private ExpandedFridgeHub fridgeHub;
-
-        /// Other components needed to imitate the ItemGrabMenu
         public InventoryMenu ItemsToGrabMenu;
         private Item sourceItem;
         public ClickableTextureComponent organizeButton;
