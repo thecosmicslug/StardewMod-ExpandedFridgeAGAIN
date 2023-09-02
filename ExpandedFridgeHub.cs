@@ -1,4 +1,5 @@
-﻿#if OLD_CODE
+﻿
+#if OLD_CODE
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
@@ -8,9 +9,7 @@ using StardewValley.Menus;
 using StardewValley.Objects;
 using StardewValley.Locations;
 using StardewModdingAPI.Events;
-using StardewModdingAPI/Utility;
 using Netcode;
-
 
 namespace ExpandedFridge
 {
@@ -911,4 +910,5 @@ namespace ExpandedFridge
 
     }
 }
+
 #endif
