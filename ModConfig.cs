@@ -1,6 +1,5 @@
 ﻿using StardewModdingAPI;
 
-
 namespace ExpandedFridge
 {
     //* Stores options for the Manager.

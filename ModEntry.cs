@@ -1,5 +1,4 @@
-﻿
-using StardewModdingAPI;
+﻿using StardewModdingAPI;
 using StardewModdingAPI.Events;
 
 namespace ExpandedFridge
