@@ -15,7 +15,7 @@ namespace ExpandedFridge
     //* This menu is just a stripped down version of an ItemGrabMenu.
     //* The main difference is that we use our extended fridge as a guide to what inventories we display and how items are transfered.
     //* We also do some extra mutex callbacks when the menu is closed if the fridge was accessed remotely.
-    class ExpandedFridgeMenu : MenuWithInventory
+    public class ExpandedFridgeMenu : MenuWithInventory
     {
  
         private List<ClickableComponent> chestTabs = new List<ClickableComponent>();
