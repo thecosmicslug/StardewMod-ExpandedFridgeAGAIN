@@ -1,15 +1,5 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Netcode;
-using StardewValley.Objects;
-using StardewValley.Menus;
-using StardewValley;
-using System;
-using System.Collections.Generic;
-using StardewModdingAPI;
+﻿using StardewModdingAPI;
 using StardewModdingAPI.Events;
-
 
 namespace ExpandedFridge
 {

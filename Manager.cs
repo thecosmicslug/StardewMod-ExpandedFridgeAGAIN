@@ -1,17 +1,13 @@
-﻿using System.Collections.Generic;
-
-using StardewModdingAPI;
-using StardewModdingAPI.Events;
-
-using StardewValley;
+﻿using StardewValley;
 using StardewValley.Menus;
 using StardewValley.Objects;
 using StardewValley.Network;
 using StardewValley.Locations;
-
+using StardewModdingAPI;
+using StardewModdingAPI.Events;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
+using System.Collections.Generic;
 
 namespace ExpandedFridge
 {
@@ -125,7 +121,6 @@ namespace ExpandedFridge
         private void OnFridgeOpened(ItemGrabMenu menu)
         {
             //* get multimutex from mini friges
-            //TODO: Add Ginger island support here ??
             var farmHouse = Utilities.CurrentLocation as FarmHouse;
             var miniFridges = Utilities.GetAllMiniFridgesInLocation(farmHouse);
             

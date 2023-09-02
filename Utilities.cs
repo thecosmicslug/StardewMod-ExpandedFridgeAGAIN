@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using StardewValley;
 using StardewValley.Objects;
 using StardewValley.Menus;
 using StardewValley.Locations;
-
 using Microsoft.Xna.Framework;
-
 
 namespace ExpandedFridge
 {
