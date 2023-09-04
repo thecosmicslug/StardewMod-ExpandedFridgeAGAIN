@@ -25,7 +25,6 @@ namespace ExpandedFridge
             _entry.Helper.Events.Display.MenuChanged += OnMenuChanged;
             _entry.Helper.Events.GameLoop.DayStarted += OnDayStarted;
             _entry.Helper.Events.GameLoop.DayEnding += OnDayEnding;
-            ModEntry.DebugLog("FridgeManager created");
         }
 
         bool _inFridgeMenu = false;
