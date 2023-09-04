@@ -2,7 +2,7 @@
 
 namespace ExpandedFridge
 {
-    //* Stores options for the Manager.
+    //* Stores options for the FridgeManager.
     public class ModConfig
     {
         public bool HideMiniFridges { get; set; } = true;
