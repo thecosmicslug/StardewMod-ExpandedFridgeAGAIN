@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework;
 namespace ExpandedFridge
 {
     //* Collections of static methods and variables.
-    class Utilities
+    class modUtilities
     {
         public const int MiniFridgeSheetIndex = 216;
         public const int OutOfBoundsTileY = -300;
@@ -17,9 +17,8 @@ namespace ExpandedFridge
         //* Wrapper for getting players current location.
         public static GameLocation CurrentLocation { get { return Game1.player.currentLocation; } }
         
-        //* Checks if a location has a fridge.
-        //TODO: Add Ginger island support here.
-        public static bool IsFridgeInLocation(GameLocation location)
+        //* Checks if fridge is enabled.
+        public static bool IsFridgeInFarmHouse(GameLocation location)
         {
             return ((location is FarmHouse) && (location as FarmHouse).upgradeLevel > 0);
         }
@@ -45,17 +44,20 @@ namespace ExpandedFridge
         //* Get an array of all locations that have fridges.
         //WARNING: If not on Master Game it could miss locations with fridges.
         //* Must use request locations or other way to ensure all locations on remote players.
-        //TODO: Add Ginger island support here?
+        //TODO: Add island support to GetAllFridgeHouses()?
         public static FarmHouse[] GetAllFridgeHouses()
         {
             List<FarmHouse> fridgeLocations = new List<FarmHouse>();
             
             foreach (var location in Game1.locations)
             {
-                if (IsFridgeInLocation(location))
+                //* Farm House
+                if (IsFridgeInFarmHouse(location)){
                     fridgeLocations.Add(location as FarmHouse);
-                else if (location is Farm)
-                {
+                }
+                //* Farm Cabins
+                else if (location is Farm){
+
                     foreach (var building in (location as Farm).buildings)
                     {
                         if (building.isCabin && building.daysOfConstructionLeft.Value <= 0 && (building.indoors.Value as FarmHouse).upgradeLevel > 0)
@@ -73,16 +75,14 @@ namespace ExpandedFridge
         public static Chest[] GetAllMiniFridgesInLocation(GameLocation location)
         {
             List<Chest> miniFridges = new List<Chest>();
-            SortedDictionary<Vector2, Chest> miniFridgeDictionary = new SortedDictionary<Vector2, Chest>(
-                Comparer<Vector2>.Create((v1, v2) => v1 == v2 ? 0 : v1.Y > v2.Y ? 1 : (v1.Y == v2.Y && v1.X > v2.X) ? 1 : -1));
 
-            //* find all chests in location of mini fridge index
-            foreach (var p in location.objects.Pairs)
-                if (IsObjectMiniFridge(p.Value))
-                    miniFridgeDictionary.Add(p.Key, p.Value as Chest);
-
-            foreach (var c in miniFridgeDictionary.Values)
-                miniFridges.Add(c);
+            //* find all mini-fridges
+            foreach (StardewValley.Object item in location.objects.Values){
+                if (item != null && item.bigCraftable.Value && item is Chest && item.ParentSheetIndex == 216)
+                {
+                    miniFridges.Add(item as Chest);
+                }
+            }
 
             return miniFridges.ToArray();
         }
@@ -91,9 +91,9 @@ namespace ExpandedFridge
         //WARNING: This can return a value outside the map bounds.
         public static Point GetFreeTileInLocation(GameLocation location)
         {
-            for (int h = 0; h <= location.map.Layers[0].LayerHeight; h++)//(int h = location.map.Layers[0].LayerHeight; h >= 0; h--)
+            for (int h = 0; h <= location.map.Layers[0].LayerHeight; h++)
                 for (int w = 0; w <= location.map.Layers[0].LayerWidth; w++)
-                    // check if tile in width and height is placeable and not on wall
+                    //* check if tile in width and height is placeable and not on wall
                     if (location.isTileLocationTotallyClearAndPlaceable(w, h) && (!(location is DecoratableLocation) || !(location as DecoratableLocation).isTileOnWall(w, h)))
                         return new Point(w, h);
 
@@ -196,9 +196,9 @@ namespace ExpandedFridge
                             if (!IsPointInsideMapBounds(p.Key, h))
                             {
                                 miniFridgePositions.Add(p.Key);
-                                break;
-                            }
-                        }
+                        break;
+                    }
+                }
                     }
                 }
 

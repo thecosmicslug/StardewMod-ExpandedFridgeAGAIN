@@ -1,6 +1,9 @@
 ﻿using StardewModdingAPI;
 using StardewModdingAPI.Events;
 
+using System;
+using System.Collections.Generic;
+
 namespace ExpandedFridge
 {
     //* The entry point of the mod handled by SMAPI.
@@ -10,9 +13,9 @@ namespace ExpandedFridge
         private static ModEntry _instance = null;
 
         public ModConfig Config { get; private set; }
-        public Manager Manager { get; private set; }
+        public FridgeManager FridgeManager { get; private set; }
 
-        //* Setup instance and mini fridge manager on entry.
+        //* Setup instance and mini-fridge manager on entry.
         public override void Entry(IModHelper helper)
         {
             _instance = this;
@@ -21,8 +24,8 @@ namespace ExpandedFridge
             //* Prepare GenericModConfigMenu
             Helper.Events.GameLoop.GameLaunched += onLaunched;
 
-            //* Start Manager
-            Manager = new Manager(this);
+            //* Start FridgeManager
+            FridgeManager = new FridgeManager(this);
         }
 
          //* Setup for GenericModConfigMenu
@@ -45,7 +48,7 @@ namespace ExpandedFridge
         }
 
         //* Prints message in console log with given log level.
-        public static void DebugLog(string message, LogLevel level = LogLevel.Trace)
+        public static void DebugLog(string message, LogLevel level = LogLevel.Info)
         {
             if (_instanceInitiated)
                 _instance.Monitor.Log(message, level);

@@ -12,20 +12,20 @@ using System.Collections.Generic;
 namespace ExpandedFridge
 {
     //* Handles the tracking and implementation of managing mini fridges in each farmhouse so they can be hidden and accessed from the main fridge.
-    public class Manager
+    public class FridgeManager
     {
 
         private ModEntry _entry = null;
         private List<Chest> _fridges = new List<Chest>();
 
         //* Constructor starts tracking needed event for tracking fridge inventory menu.
-        public Manager(ModEntry entry)
+        public FridgeManager(ModEntry entry)
         {
             _entry = entry;
             _entry.Helper.Events.Display.MenuChanged += OnMenuChanged;
             _entry.Helper.Events.GameLoop.DayStarted += OnDayStarted;
             _entry.Helper.Events.GameLoop.DayEnding += OnDayEnding;
-            ModEntry.DebugLog("Manager created");
+            ModEntry.DebugLog("FridgeManager created");
         }
 
         bool _inFridgeMenu = false;
@@ -51,7 +51,7 @@ namespace ExpandedFridge
         {
             if (Game1.IsMasterGame && _entry.Config.HideMiniFridges)
             {
-                Utilities.MoveMiniFridgesOutOfMapBounds();
+                modUtilities.MoveMiniFridgesOutOfMapBounds();
             }
         }
         
@@ -60,16 +60,15 @@ namespace ExpandedFridge
         {
             if (Game1.IsMasterGame && _entry.Config.HideMiniFridges)
             {
-                Utilities.MoveMiniFridgesOutOfMapBounds();
-                Utilities.MoveMiniFridgesIntoMapBounds();
+                modUtilities.MoveMiniFridgesOutOfMapBounds();
+                modUtilities.MoveMiniFridgesIntoMapBounds();
             }
         }
-        //TODO: Add Ginger island support here.
         //* Is given menu of a main fridge in same location.
         private bool IsMenuOfCurrentFridge(IClickableMenu menu)
         {
-            if (menu is ItemGrabMenu && Utilities.CurrentLocation is FarmHouse)
-                return (menu as ItemGrabMenu).context == (Utilities.CurrentLocation as FarmHouse).fridge.Value;
+            if (menu is ItemGrabMenu && modUtilities.CurrentLocation is FarmHouse)
+                return (menu as ItemGrabMenu).context == (modUtilities.CurrentLocation as FarmHouse).fridge.Value;
             return false;
         }
 
@@ -120,9 +119,8 @@ namespace ExpandedFridge
         //* Initiates custom menu with references and events.
         private void OnFridgeOpened(ItemGrabMenu menu)
         {
-            //* get multimutex from mini friges
-            var farmHouse = Utilities.CurrentLocation as FarmHouse;
-            var miniFridges = Utilities.GetAllMiniFridgesInLocation(farmHouse);
+            var farmHouse = modUtilities.CurrentLocation as FarmHouse;
+            var miniFridges = modUtilities.GetAllMiniFridgesInLocation(farmHouse);
             
             _menu = menu;
             _fridges.Add(farmHouse.fridge);
@@ -228,9 +226,9 @@ namespace ExpandedFridge
 
                     _selectedTab = tab;
                     if (tab > 0)
-                        _menu = Utilities.GetNewItemGrabMenuFromChest(_fridges[tab], true);
+                        _menu = modUtilities.GetNewItemGrabMenuFromChest(_fridges[tab], true);
                     else
-                        _menu = Utilities.GetNewItemGrabMenuFromChest(_fridges[tab], false);
+                        _menu = modUtilities.GetNewItemGrabMenuFromChest(_fridges[tab], false);
 
                     Game1.activeClickableMenu = _menu;
                     Game1.playSound("smallSelect");
@@ -246,9 +244,9 @@ namespace ExpandedFridge
 
                         _selectedTab = tab;
                         if (tab > 0)
-                            _menu = Utilities.GetNewItemGrabMenuFromChest(_fridges[tab], true);
+                            _menu = modUtilities.GetNewItemGrabMenuFromChest(_fridges[tab], true);
                         else
-                            _menu = Utilities.GetNewItemGrabMenuFromChest(_fridges[tab], false);
+                            _menu = modUtilities.GetNewItemGrabMenuFromChest(_fridges[tab], false);
 
                         Game1.activeClickableMenu = _menu;
                         Game1.playSound("smallSelect");
@@ -292,11 +290,11 @@ namespace ExpandedFridge
                 IClickableMenu.drawTextureBox(e.SpriteBatch, Game1.menuTexture, new Rectangle(0, 256, 60, 60), xpos, tab.bounds.Y, tab.bounds.Width, tab.bounds.Height, _selectedTab == index ? Color.White : new Color(0.3f, 0.3f, 0.3f, 1f), 1, false);
                 Color tabCol = index == 0 ? Color.BurlyWood : _fridgeTabsColors[index] == Color.Black ? Color.BurlyWood : _fridgeTabsColors[index];
                 e.SpriteBatch.Draw(Game1.staminaRect, new Rectangle(xpos + colorOffsetX, tab.bounds.Y + colorOffsetY, (int)(tab.bounds.Width * colorSizeModX), (int)(tab.bounds.Height * colorSizeModY)), tabCol);
-                //TODO: Make compatible with 'Better Chests' by shifting the tabs & item window lower down?
+                //TODO: Make compatible with 'Better Chests'.
                 if (index == 0)
                 {
                     const float scaleSize = 2f;
-                    Rectangle rectForBigCraftable = Object.getSourceRectForBigCraftable(Utilities.MiniFridgeSheetIndex);
+                    Rectangle rectForBigCraftable = Object.getSourceRectForBigCraftable(modUtilities.MiniFridgeSheetIndex);
                     rectForBigCraftable.Height -= 16;
                     e.SpriteBatch.Draw(Game1.bigCraftableSpriteSheet, new Vector2(xpos + 32f, tab.bounds.Y + 32f + 21f), new Microsoft.Xna.Framework.Rectangle?(rectForBigCraftable), Color.White, 0.0f, new Vector2(8f, 16f), scaleSize, SpriteEffects.None, 1);
                 }
