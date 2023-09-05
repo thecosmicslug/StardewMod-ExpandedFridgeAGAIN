@@ -64,10 +64,13 @@ namespace ExpandedFridge
             }
         }
         //* Is given menu of a main fridge in same location.
+        //TODO: Add Ginger Island support.
         private bool IsMenuOfCurrentFridge(IClickableMenu menu)
         {
             if (menu is ItemGrabMenu && modUtilities.CurrentLocation is FarmHouse)
                 return (menu as ItemGrabMenu).context == (modUtilities.CurrentLocation as FarmHouse).fridge.Value;
+            if (menu is ItemGrabMenu && modUtilities.CurrentLocation is IslandFarmHouse)
+                return (menu as ItemGrabMenu).context == (modUtilities.CurrentLocation as IslandFarmHouse).fridge.Value;
             return false;
         }
 
@@ -118,19 +121,29 @@ namespace ExpandedFridge
         //* Initiates custom menu with references and events.
         private void OnFridgeOpened(ItemGrabMenu menu)
         {
-            var farmHouse = modUtilities.CurrentLocation as FarmHouse;
-            var miniFridges = modUtilities.GetAllMiniFridgesInLocation(farmHouse);
-            
+
+            if (modUtilities.CurrentLocation is FarmHouse){
+                var farmHouse = modUtilities.CurrentLocation as FarmHouse;
+                var miniFridges = modUtilities.GetAllMiniFridgesInLocation(farmHouse);
+                _fridges.Add(farmHouse.fridge);
+                _fridges.AddRange(miniFridges);
+                ModEntry.DebugLog("Fridge opened in " + farmHouse.name);
+            }
+            else if (modUtilities.CurrentLocation is IslandFarmHouse){
+                var farmHouse = modUtilities.CurrentLocation as IslandFarmHouse;
+                var miniFridges = modUtilities.GetAllMiniFridgesInLocation(farmHouse);
+                _fridges.Add(farmHouse.fridge);
+                _fridges.AddRange(miniFridges);
+                ModEntry.DebugLog("Fridge opened in " + farmHouse.name);
+            }
+
             _menu = menu;
-            _fridges.Add(farmHouse.fridge);
-            _fridges.AddRange(miniFridges);
             _entry.Helper.Events.Display.RenderingActiveMenu += DrawBeforeActiveMenu;
             _entry.Helper.Events.Input.ButtonPressed += RecieveButtonPressed;
             _entry.Helper.Events.Input.MouseWheelScrolled += RecieveMouseWheelScrolled;
             UpdateCustomComponents();
             _customMenuInitiated = true;
 
-            ModEntry.DebugLog("Fridge opened");
         }
 
         //* Components for inventory tabs.
@@ -289,7 +302,7 @@ namespace ExpandedFridge
                 IClickableMenu.drawTextureBox(e.SpriteBatch, Game1.menuTexture, new Rectangle(0, 256, 60, 60), xpos, tab.bounds.Y, tab.bounds.Width, tab.bounds.Height, _selectedTab == index ? Color.White : new Color(0.3f, 0.3f, 0.3f, 1f), 1, false);
                 Color tabCol = index == 0 ? Color.BurlyWood : _fridgeTabsColors[index] == Color.Black ? Color.BurlyWood : _fridgeTabsColors[index];
                 e.SpriteBatch.Draw(Game1.staminaRect, new Rectangle(xpos + colorOffsetX, tab.bounds.Y + colorOffsetY, (int)(tab.bounds.Width * colorSizeModX), (int)(tab.bounds.Height * colorSizeModY)), tabCol);
-                //TODO: Make compatible with 'Better Chests'.
+                //NOTE: Make compatible with 'Better Chests' here?.
                 if (index == 0)
                 {
                     const float scaleSize = 2f;

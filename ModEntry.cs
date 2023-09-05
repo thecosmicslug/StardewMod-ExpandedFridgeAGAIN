@@ -39,7 +39,7 @@ namespace ExpandedFridge
             api.RegisterModConfig(ModManifest, () => Config = new ModConfig(), () => Helper.WriteConfig(Config));
 
             //* Our Options
-            //TODO: Add Translation support some day.
+            //NOTE: Add Translation support some day.
             api.SetDefaultIngameOptinValue(ModManifest, true);
             api.RegisterSimpleOption(ModManifest, "ShowDebugMessages", "Show Debugging Messages.", () => Config.ShowDebugMessages, (bool val) => Config.ShowDebugMessages = val);
             api.RegisterSimpleOption(ModManifest, "HideMiniFridges", "Hide the mini-fridges.", () => Config.HideMiniFridges, (bool val) => Config.HideMiniFridges = val);
