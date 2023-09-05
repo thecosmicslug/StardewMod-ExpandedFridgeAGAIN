@@ -89,7 +89,7 @@ namespace ExpandedFridge
             foreach (GameLocation location in FridgeManager.GetFridgeLocations()){
                 //* Farm House
                 if(location is FarmHouse){
-                    ModEntry.DebugLog("Found a fridge at: " + location.name);
+                    ModEntry.DebugLog("Found a fridge at: " + location.Name);
                     if (bHide){
                         HideMiniFridgesInLocation(location);
                     }else{
@@ -100,7 +100,7 @@ namespace ExpandedFridge
                 else if (location is Farm){
                     foreach (var building in (location as Farm).buildings){
                         if (building.isCabin && building.daysOfConstructionLeft.Value <= 0 && (building.indoors.Value as FarmHouse).upgradeLevel > 0){
-                            ModEntry.DebugLog("Found a fridge at: " + location.name);
+                            ModEntry.DebugLog("Found a fridge at: " + location.Name);
                             if (bHide){
                                 HideMiniFridgesInLocation(location);
                             }else{
@@ -112,7 +112,7 @@ namespace ExpandedFridge
                 //* Ginger Island
                 else if (location is IslandFarmHouse){
                     //TODO: Test this on a savegame without ginger island unlocked.
-                    ModEntry.DebugLog("Found a fridge at: " + location.name);
+                    ModEntry.DebugLog("Found a fridge at: " + location.Name);
                     if (bHide){
                         HideMiniFridgesInLocation(location);
                     }else{
@@ -154,6 +154,8 @@ namespace ExpandedFridge
                     newPosition.X = ++x;
 
                 StardewValley.Object obj = location.objects[v];
+
+                //*NOTE: warning AvoidNetField: 'obj.tileLocation' is a NetVector2 field; consider using the TileLocation property instead. See https://smapi.io/package/avoid-net-field for details.
                 obj.tileLocation.Value = newPosition;
 
                 location.objects.Remove(v);
@@ -162,7 +164,7 @@ namespace ExpandedFridge
                 ModEntry.DebugLog("Moved mini-fridge from X:" + v.X + " Y:" + v.Y + " to X:" + newPosition.X +  " Y:" + newPosition.Y);
             }
 
-            ModEntry.DebugLog(location.name + " Finished!");
+            ModEntry.DebugLog(location.Name + " Finished!");
         }
 
         //* Moves all mini fridges in the location back into map bounds.
@@ -189,6 +191,7 @@ namespace ExpandedFridge
             ModEntry.DebugLog("Moving mini-fridges back into view..");
             foreach (Vector2 v in miniFridgePositions)
             {
+                //*NOTE: warning AvoidNetField: 'obj.tileLocation' is a NetVector2 field; consider using the TileLocation property instead. See https://smapi.io/package/avoid-net-field for details.
                 Vector2 newPosition = GetFreeTileInLocation(location);
                 StardewValley.Object obj = location.objects[v];
                 obj.tileLocation.Value = newPosition;
@@ -199,7 +202,7 @@ namespace ExpandedFridge
                 ModEntry.DebugLog("Moved mini-fridge from X:" + v.X + " Y:" + v.Y + " to X:" + newPosition.X +  " Y:" + newPosition.Y);
                 
             }
-            ModEntry.DebugLog(location.name + " Finished!");
+            ModEntry.DebugLog(location.Name + " Finished!");
         }
     }
 }

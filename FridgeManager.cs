@@ -212,16 +212,16 @@ namespace ExpandedFridge
                 //TODO: Test if this includes the cabins
                 var farmHouse = modUtilities.CurrentLocation as FarmHouse;
                 var miniFridges = modUtilities.GetAllMiniFridgesInLocation(farmHouse);
-                _fridges.Add(farmHouse.fridge);
+                _fridges.Add(farmHouse.fridge.Value);
                 _fridges.AddRange(miniFridges);
-                ModEntry.DebugLog("Fridge opened in " + farmHouse.name);
+                ModEntry.DebugLog("Fridge opened in " + farmHouse.Name);
             }
             else if (modUtilities.CurrentLocation is IslandFarmHouse){
                 var farmHouse = modUtilities.CurrentLocation as IslandFarmHouse;
                 var miniFridges = modUtilities.GetAllMiniFridgesInLocation(farmHouse);
-                _fridges.Add(farmHouse.fridge);
+                _fridges.Add(farmHouse.fridge.Value);
                 _fridges.AddRange(miniFridges);
-                ModEntry.DebugLog("Fridge opened in " + farmHouse.name);
+                ModEntry.DebugLog("Fridge opened in " + farmHouse.Name);
             }
 
             _menu = menu;
@@ -263,7 +263,7 @@ namespace ExpandedFridge
             for (int ii = 0; ii < _fridges.Count; ii++)
             {
                 _fridgeTabs.Add(new ClickableComponent(new Rectangle(labelX + Game1.tileSize * i, labelY, Game1.tileSize, Game1.tileSize), (i).ToString(), (i++).ToString()));
-                _fridgeTabsColors.Add(_fridges[ii].playerChoiceColor);
+                _fridgeTabsColors.Add(_fridges[ii].playerChoiceColor.Value);
             }
 
             //* left right arrow components for scrolling
@@ -373,7 +373,7 @@ namespace ExpandedFridge
                 _updateTabColors = false;
                 _fridgeTabsColors.Clear();
                 foreach (var c in _fridges)
-                    _fridgeTabsColors.Add(c.playerChoiceColor);
+                    _fridgeTabsColors.Add(c.playerChoiceColor.Value);
             }
 
             //* draw tabs
