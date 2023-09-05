@@ -14,9 +14,9 @@ namespace ExpandedFridge
     //* Handles the tracking and implementation of managing mini fridges in each farmhouse so they can be hidden and accessed from the main fridge.
     public class FridgeManager
     {
-
-        private ModEntry _entry = null;
+        private static ModEntry _entry = null;
         private List<Chest> _fridges = new List<Chest>();
+        bool _inFridgeMenu = false;
 
         //* Constructor starts tracking needed event for tracking fridge inventory menu.
         public FridgeManager(ModEntry entry)
@@ -27,7 +27,36 @@ namespace ExpandedFridge
             _entry.Helper.Events.GameLoop.DayEnding += OnDayEnding;
         }
 
-        bool _inFridgeMenu = false;
+        //* Get Locations
+        //TODO: Need to test split-screen & multiplayer.
+        public static GameLocation[] GetFridgeLocations(){
+
+            List<GameLocation> gLocations = new List<GameLocation>();
+            ModEntry.DebugLog("Searching for fridge locations...");
+
+            if(Game1.IsMultiplayer){
+                //* Type of Multiplayer game.
+                if (LocalMultiplayer.IsLocalMultiplayer()){
+                    ModEntry.DebugLog("Multiplayer (Split Screen) detected.");
+                }
+                else if (Game1.IsMasterGame){
+                    ModEntry.DebugLog("Multiplayer (Host) detected.");
+                }else{
+                    ModEntry.DebugLog("Multiplayer (Client) detected.");
+                }
+                //* Check Locations for Multiplayer.
+                foreach (GameLocation location in _entry.Helper.Multiplayer.GetActiveLocations()){
+                    gLocations.Add(location);
+                }
+            }else{
+                //* Check locations for Singleplayer.
+                ModEntry.DebugLog("Singleplayer detected.");
+                foreach (GameLocation location in Game1.locations){
+                    gLocations.Add(location);
+                }
+            }
+            return gLocations.ToArray();
+        }
 
         //* Detects fridge menu status and invokes OnFridge methods.
         private void OnMenuChanged(object sender, MenuChangedEventArgs e)
@@ -64,7 +93,6 @@ namespace ExpandedFridge
             }
         }
         //* Is given menu of a main fridge in same location.
-        //TODO: Add Ginger Island support.
         private bool IsMenuOfCurrentFridge(IClickableMenu menu)
         {
             if (menu is ItemGrabMenu && modUtilities.CurrentLocation is FarmHouse)
@@ -94,7 +122,6 @@ namespace ExpandedFridge
         private void OnFridgeUpdated(ItemGrabMenu menu)
         {
             _menu = menu;
-            ModEntry.DebugLog("Fridge updated");
         }
 
         //* Releases custom menu, mutexes and unsubscribes events.

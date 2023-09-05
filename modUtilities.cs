@@ -19,13 +19,6 @@ namespace ExpandedFridge
         //* Wrapper for getting players current location.
         public static GameLocation CurrentLocation { get { return Game1.player.currentLocation; } }
         
-
-        //* Is a given tile within the map bounds of the given location.
-        public static bool IsPointInsideMapBounds(Point point, GameLocation location)
-        {
-            return location.isTileOnMap(point.X, point.Y);
-        }
-
         //* Wrapper for checking point inside map bounds.
         public static bool IsPointInsideMapBounds(Vector2 point, GameLocation location)
         {
@@ -36,7 +29,6 @@ namespace ExpandedFridge
         //WARNING: This can return a value outside the map bounds.
         public static Vector2 GetFreeTileInLocation(GameLocation location)
         {
-            ModEntry.DebugLog("Looking for a free tile..");
             for (int h = 0; h <= location.map.Layers[0].LayerHeight; h++)
                 for (int w = 0; w <= location.map.Layers[0].LayerWidth; w++)
                     //* check if tile in width and height is placeable and not on wall
@@ -101,8 +93,7 @@ namespace ExpandedFridge
         //* Must use request locations or other way to ensure all locations on remote players.
         public static void MoveMiniFridgesIntoMapBounds(){
 
-            ModEntry.DebugLog("Moving mini-fridges into map... ");
-            foreach (var location in Game1.locations)
+            foreach (GameLocation location in FridgeManager.GetFridgeLocations())
             {
                 //* Farm House
                 if((location is FarmHouse) && (location as FarmHouse).upgradeLevel > 0){
@@ -123,7 +114,7 @@ namespace ExpandedFridge
                 }
                 //* Ginger Island
                 else if (location is IslandFarmHouse){
-                    //NOTE: try passing location as IslandFarmHouse once reworked.
+                    //TODO: Check we have actually visited and unlocked the IslandFarmHouse.
                     ModEntry.DebugLog("Found a fridge at: " + location.name);
                     ShowMiniFridgesInLocation(location);
                 }
@@ -131,12 +122,9 @@ namespace ExpandedFridge
 
         }
         //* Get an array of all locations that have fridges.
-        //WARNING: If not on Master Game it could miss locations with fridges.
-        //* Must use request locations or other way to ensure all locations on remote players.
         public static void MoveMiniFridgesOutOfMapBounds(){
             
-            ModEntry.DebugLog("Moving mini-fridges out of map... ");
-            foreach (var location in Game1.locations)
+            foreach (GameLocation location in FridgeManager.GetFridgeLocations())
             {
                 //* Farm House
                 if((location is FarmHouse) && (location as FarmHouse).upgradeLevel > 0){
@@ -157,7 +145,7 @@ namespace ExpandedFridge
                 }
                 //* Ginger Island
                 else if (location is IslandFarmHouse){
-                    //NOTE: try passing location as IslandFarmHouse once reworked.
+                    //TODO: Check we have actually visited and unlocked the IslandFarmHouse.
                     ModEntry.DebugLog("Found a fridge at: " + location.name);
                     HideMiniFridgesInLocation(location);
                 }
@@ -166,11 +154,8 @@ namespace ExpandedFridge
         }
 
         //* Moves all mini fridges in all farmhouses out of the map bounds.
-        //TODO: Try Passing location to MoveMiniFridgesOutOfMapBounds()
         public static void HideMiniFridgesInLocation(GameLocation location)
         {
-            
-            ModEntry.DebugLog("Begin moving mini-fridges out of view..");
             List<Vector2> miniFridgePositions = new List<Vector2>();
 
             //* find all mini-fridges positions.
@@ -179,15 +164,13 @@ namespace ExpandedFridge
                 if (obj != null && obj.bigCraftable.Value && obj is Chest && obj.ParentSheetIndex == MiniFridgeSheetIndex)
                 {
                     Chest chest_tmp = obj as Chest;
-                    ModEntry.DebugLog("Found a mini-fridge at: X- " + chest_tmp.TileLocation.X + " Y- " + chest_tmp.TileLocation.Y);
                     if (IsPointInsideMapBounds(chest_tmp.TileLocation, location)){
-                        ModEntry.DebugLog("(Mini-fridge is insideMapBounds)");
                         miniFridgePositions.Add(chest_tmp.TileLocation);
                     }
                 }
             }
-                
-            ModEntry.DebugLog("Begin moving!");
+
+            ModEntry.DebugLog("Begin moving mini-fridges out of view..");
 
             //* move them.
             foreach (var v in miniFridgePositions)
@@ -204,18 +187,15 @@ namespace ExpandedFridge
                 location.objects.Remove(v);
                 location.objects.Add(newPosition, obj);
 
-                ModEntry.DebugLog("Old Position: X-" + v.X + " Y-" + v.Y);
-                ModEntry.DebugLog("NEW Position: X-" + newPosition.X + " Y-" + newPosition.Y);
+                ModEntry.DebugLog("Moved mini-fridge from X:" + v.X + " Y:" + v.Y + " to X:" + newPosition.X +  " Y:" + newPosition.Y);
             }
 
-            ModEntry.DebugLog("Complete!");
+            ModEntry.DebugLog("Finished moving mini-fridges!");
         }
 
         //* Moves all mini fridges in all farmhouses into map bounds.
-        //TODO: Try Passing location to MoveMiniFridgesIntoMapBounds()
         public static void ShowMiniFridgesInLocation(GameLocation location)
         {
-            ModEntry.DebugLog("Begin moving mini-fridges into view..");
             List<Vector2> miniFridgePositions = new List<Vector2>();
 
             //* find all mini-fridges positions.
@@ -224,15 +204,13 @@ namespace ExpandedFridge
                 if (obj != null && obj.bigCraftable.Value && obj is Chest && obj.ParentSheetIndex == MiniFridgeSheetIndex)
                 {
                     Chest chest_tmp = obj as Chest;
-                    ModEntry.DebugLog("Found a mini-fridge at: X- " + chest_tmp.TileLocation.X + " Y- " + chest_tmp.TileLocation.Y);
                     if (!IsPointInsideMapBounds(chest_tmp.TileLocation, location)){
-                        ModEntry.DebugLog("(Mini-fridge is OutsideMapBounds)");
                         miniFridgePositions.Add(chest_tmp.TileLocation);
                     }
                 }
             }
 
-            ModEntry.DebugLog("Begin moving!");
+            ModEntry.DebugLog("Begin moving mini-fridges into view..");
             foreach (Vector2 v in miniFridgePositions)
             {
                 Vector2 newPosition = GetFreeTileInLocation(location);
@@ -243,10 +221,10 @@ namespace ExpandedFridge
                 location.objects.Remove(v);
                 location.objects.Add(newPosition, obj);
 
-                ModEntry.DebugLog("Old Position: X-" + v.X + " Y-" + v.Y);
-                ModEntry.DebugLog("NEW Position: X-" + newPosition.X + " Y-" + newPosition.Y);
+                ModEntry.DebugLog("Moved mini-fridge from X:" + v.X + " Y:" + v.Y + " to X:" + newPosition.X +  " Y:" + newPosition.Y);
+                
             }
-            ModEntry.DebugLog("Finish Moving!");
+            ModEntry.DebugLog("Finished moving mini-fridges!");
 
         }
 

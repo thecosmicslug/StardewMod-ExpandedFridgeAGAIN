@@ -51,7 +51,7 @@ namespace ExpandedFridge
         }
 
         //* Prints message in console log with given log level.
-        public static void DebugLog(string message, LogLevel level = LogLevel.Info)
+        public static void DebugLog(string message, LogLevel level = LogLevel.Debug)
         {
             if (_instanceInitiated)
                 //* Always show errors.
