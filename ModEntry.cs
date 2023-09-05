@@ -18,23 +18,20 @@ namespace ExpandedFridge
         //* Setup instance and mini-fridge manager on entry.
         public override void Entry(IModHelper helper)
         {
-            _instance = this;
             
-            //* Prepare GenericModConfigMenu
+            //* Prepare Event Hooks
             Helper.Events.GameLoop.GameLaunched += onLaunched;
+            Helper.Events.GameLoop.SaveLoaded +=   onSaveLoaded;
 
-            //* Start FridgeManager
-            FridgeManager = new FridgeManager(this);
+            //* Load Config
+            _instance = this;
+            Config = Helper.ReadConfig<ModConfig>();
+            _instanceInitiated = true;
         }
 
          //* Setup for GenericModConfigMenu
         private void onLaunched(object sender, GameLaunchedEventArgs e)
         {
-
-            //* Load Config
-            Config = Helper.ReadConfig<ModConfig>();
-
-            //* Now Setup GenericModConfigMenu support
             var api = Helper.ModRegistry.GetApi<GenericModConfigMenuAPI>("spacechase0.GenericModConfigMenu");
             api.RegisterModConfig(ModManifest, () => Config = new ModConfig(), () => Helper.WriteConfig(Config));
 
@@ -45,9 +42,17 @@ namespace ExpandedFridge
             api.RegisterSimpleOption(ModManifest, "HideMiniFridges", "Hide the mini-fridges.", () => Config.HideMiniFridges, (bool val) => Config.HideMiniFridges = val);
             api.RegisterSimpleOption(ModManifest, "NextFridgeTabButton", "Button to navigate to next tab.", () => Config.NextFridgeTabButton, (SButton val) => Config.NextFridgeTabButton = val);
             api.RegisterSimpleOption(ModManifest, "LastFridgeTabButton", "Button to navigate to previous tab.", () => Config.LastFridgeTabButton, (SButton val) => Config.LastFridgeTabButton = val);
+        }
 
-            //* Setup Completed.
-            _instanceInitiated = true;
+        //* The method invoked when the player loads a save.
+        private void onSaveLoaded(object sender, EventArgs e)
+        {
+            //* Start FridgeManager
+            DebugLog("GenericModConfigMenu setup completed.");
+            FridgeManager = new FridgeManager(_instance);
+
+            //* Debuggin'
+            FridgeManager.MultiplayerMode();
         }
 
         //* Prints message in console log with given log level.

@@ -9,6 +9,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
+//TODO: Add Github update key before uploading to nexus.
+
 namespace ExpandedFridge
 {
     //* Handles the tracking and implementation of managing mini fridges in each farmhouse so they can be hidden and accessed from the main fridge.
@@ -25,17 +27,15 @@ namespace ExpandedFridge
             _entry.Helper.Events.Display.MenuChanged += OnMenuChanged;
             _entry.Helper.Events.GameLoop.DayStarted += OnDayStarted;
             _entry.Helper.Events.GameLoop.DayEnding += OnDayEnding;
+            
+            ModEntry.DebugLog("FridgeManager Running.");
+
         }
 
         //* Get Locations
         //TODO: Need to test split-screen & multiplayer.
-        public static GameLocation[] GetFridgeLocations(){
-
-            List<GameLocation> gLocations = new List<GameLocation>();
-            ModEntry.DebugLog("Searching for fridge locations...");
-
+        public void MultiplayerMode(){
             if(Game1.IsMultiplayer){
-                //* Type of Multiplayer game.
                 if (LocalMultiplayer.IsLocalMultiplayer()){
                     ModEntry.DebugLog("Multiplayer (Split Screen) detected.");
                 }
@@ -44,13 +44,21 @@ namespace ExpandedFridge
                 }else{
                     ModEntry.DebugLog("Multiplayer (Client) detected.");
                 }
+            }else{
+                ModEntry.DebugLog("Singleplayer mode detected.");
+            }
+        }
+
+        public static GameLocation[] GetFridgeLocations(){
+
+            List<GameLocation> gLocations = new List<GameLocation>();
+            if(Game1.IsMultiplayer){
                 //* Check Locations for Multiplayer.
                 foreach (GameLocation location in _entry.Helper.Multiplayer.GetActiveLocations()){
                     gLocations.Add(location);
                 }
             }else{
                 //* Check locations for Singleplayer.
-                ModEntry.DebugLog("Singleplayer detected.");
                 foreach (GameLocation location in Game1.locations){
                     gLocations.Add(location);
                 }

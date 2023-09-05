@@ -73,16 +73,13 @@ namespace ExpandedFridge
         //* Get an array of mini fridge chests that exists in given location. They are sorted by their tile coordinates with Y as higher priority.
         public static Chest[] GetAllMiniFridgesInLocation(GameLocation location)
         {
-            ModEntry.DebugLog("Searching for Mini-Fridges...");
             List<Chest> miniFridges = new List<Chest>();
-
             foreach(StardewValley.Object obj in location.Objects.Values){
 
                 if (obj != null && obj.bigCraftable.Value && obj is Chest && obj.ParentSheetIndex == MiniFridgeSheetIndex)
                 {
                     Chest chest_tmp = obj as Chest;
                     miniFridges.Add(chest_tmp);
-                    ModEntry.DebugLog("Found a mini-fridge at X: " + chest_tmp.TileLocation.X + " Y: " + chest_tmp.TileLocation.Y);
                 }
             }
             return miniFridges.ToArray();
@@ -92,7 +89,7 @@ namespace ExpandedFridge
         //WARNING: If not on Master Game it could miss locations with fridges.
         //* Must use request locations or other way to ensure all locations on remote players.
         public static void MoveMiniFridgesIntoMapBounds(){
-
+            ModEntry.DebugLog("Searching for fridge locations...");
             foreach (GameLocation location in FridgeManager.GetFridgeLocations())
             {
                 //* Farm House
@@ -123,7 +120,7 @@ namespace ExpandedFridge
         }
         //* Get an array of all locations that have fridges.
         public static void MoveMiniFridgesOutOfMapBounds(){
-            
+            ModEntry.DebugLog("Searching for fridge locations...");
             foreach (GameLocation location in FridgeManager.GetFridgeLocations())
             {
                 //* Farm House
