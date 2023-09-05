@@ -14,20 +14,20 @@ namespace ExpandedFridge
     class modUtilities
     {
         public const int MiniFridgeSheetIndex = 216;
-        public const int OutOfBoundsTileY = -300;
+        private const int OutOfBoundsTileY = -300;
 
         //* Wrapper for getting players current location.
         public static GameLocation CurrentLocation { get { return Game1.player.currentLocation; } }
         
         //* Wrapper for checking point inside map bounds.
-        public static bool IsPointInsideMapBounds(Vector2 point, GameLocation location)
+        private static bool IsPointInsideMapBounds(Vector2 point, GameLocation location)
         {
             return location.isTileOnMap(point);
         }
 
         //* Get a free tile for chest placement in a location.
         //WARNING: This can return a value outside the map bounds.
-        public static Vector2 GetFreeTileInLocation(GameLocation location)
+        private static Vector2 GetFreeTileInLocation(GameLocation location)
         {
             for (int h = 0; h <= location.map.Layers[0].LayerHeight; h++)
                 for (int w = 0; w <= location.map.Layers[0].LayerWidth; w++)
@@ -75,91 +75,61 @@ namespace ExpandedFridge
         {
             List<Chest> miniFridges = new List<Chest>();
             foreach(StardewValley.Object obj in location.Objects.Values){
-
-                if (obj != null && obj.bigCraftable.Value && obj is Chest && obj.ParentSheetIndex == MiniFridgeSheetIndex)
-                {
+                if (obj != null && obj.bigCraftable.Value && obj is Chest && obj.ParentSheetIndex == MiniFridgeSheetIndex){
                     Chest chest_tmp = obj as Chest;
                     miniFridges.Add(chest_tmp);
                 }
             }
             return miniFridges.ToArray();
         }
-
-        //* Get an array of all locations that have fridges.
-        //WARNING: If not on Master Game it could miss locations with fridges.
-        //* Must use request locations or other way to ensure all locations on remote players.
-        public static void MoveMiniFridgesIntoMapBounds(){
+        
+        public static void MoveAllMiniFridges(bool bHide)
+        {
             ModEntry.DebugLog("Searching for fridge locations...");
-            foreach (GameLocation location in FridgeManager.GetFridgeLocations())
-            {
+            foreach (GameLocation location in FridgeManager.GetFridgeLocations()){
                 //* Farm House
-                if((location is FarmHouse) && (location as FarmHouse).upgradeLevel > 0){
-                            ModEntry.DebugLog("Found a fridge at: " + location.name);
-                            ShowMiniFridgesInLocation(location);
+                if(location is FarmHouse){
+                    ModEntry.DebugLog("Found a fridge at: " + location.name);
+                    if (bHide){
+                        HideMiniFridgesInLocation(location);
+                    }else{
+                        ShowMiniFridgesInLocation(location);
+                    }
                 }
                 //* Farm Cabins
                 else if (location is Farm){
-
-                    foreach (var building in (location as Farm).buildings)
-                    {
-                        if (building.isCabin && building.daysOfConstructionLeft.Value <= 0 && (building.indoors.Value as FarmHouse).upgradeLevel > 0)
-                        {
+                    foreach (var building in (location as Farm).buildings){
+                        if (building.isCabin && building.daysOfConstructionLeft.Value <= 0 && (building.indoors.Value as FarmHouse).upgradeLevel > 0){
                             ModEntry.DebugLog("Found a fridge at: " + location.name);
-                            ShowMiniFridgesInLocation(location);
+                            if (bHide){
+                                HideMiniFridgesInLocation(location);
+                            }else{
+                                ShowMiniFridgesInLocation(location);
+                            }
                         }
                     }
                 }
                 //* Ginger Island
                 else if (location is IslandFarmHouse){
-                    //TODO: Check we have actually visited and unlocked the IslandFarmHouse.
+                    //TODO: Test this on a savegame without ginger island unlocked.
                     ModEntry.DebugLog("Found a fridge at: " + location.name);
-                    ShowMiniFridgesInLocation(location);
-                }
-            }
-
-        }
-        //* Get an array of all locations that have fridges.
-        public static void MoveMiniFridgesOutOfMapBounds(){
-            ModEntry.DebugLog("Searching for fridge locations...");
-            foreach (GameLocation location in FridgeManager.GetFridgeLocations())
-            {
-                //* Farm House
-                if((location is FarmHouse) && (location as FarmHouse).upgradeLevel > 0){
-                    ModEntry.DebugLog("Found a fridge at: " + location.name);
-                    HideMiniFridgesInLocation(location);
-                }
-                //* Farm Cabins
-                else if (location is Farm){
-
-                    foreach (var building in (location as Farm).buildings)
-                    {
-                        if (building.isCabin && building.daysOfConstructionLeft.Value <= 0 && (building.indoors.Value as FarmHouse).upgradeLevel > 0)
-                        {
-                            ModEntry.DebugLog("Found a fridge at: " + location.name);
-                            HideMiniFridgesInLocation(location);
-                        }
+                    if (bHide){
+                        HideMiniFridgesInLocation(location);
+                    }else{
+                        ShowMiniFridgesInLocation(location);
                     }
                 }
-                //* Ginger Island
-                else if (location is IslandFarmHouse){
-                    //TODO: Check we have actually visited and unlocked the IslandFarmHouse.
-                    ModEntry.DebugLog("Found a fridge at: " + location.name);
-                    HideMiniFridgesInLocation(location);
-                }
-            }
-            
+            }  
         }
 
         //* Moves all mini fridges in all farmhouses out of the map bounds.
-        public static void HideMiniFridgesInLocation(GameLocation location)
+        private static void HideMiniFridgesInLocation(GameLocation location)
         {
             List<Vector2> miniFridgePositions = new List<Vector2>();
 
             //* find all mini-fridges positions.
             foreach(StardewValley.Object obj in location.objects.Values){
-
-                if (obj != null && obj.bigCraftable.Value && obj is Chest && obj.ParentSheetIndex == MiniFridgeSheetIndex)
-                {
+                if (obj != null && obj.bigCraftable.Value && obj is Chest && obj.ParentSheetIndex == MiniFridgeSheetIndex){
                     Chest chest_tmp = obj as Chest;
                     if (IsPointInsideMapBounds(chest_tmp.TileLocation, location)){
                         miniFridgePositions.Add(chest_tmp.TileLocation);
@@ -167,9 +137,14 @@ namespace ExpandedFridge
                 }
             }
 
-            ModEntry.DebugLog("Begin moving mini-fridges out of view..");
-
+            //* Quit here if we dont have any mini-fridges
+            if (miniFridgePositions.Count == 0){
+                ModEntry.DebugLog("No mini-fridges found!");
+                return;
+            }
+            
             //* move them.
+            ModEntry.DebugLog("Moving mini-fridges out of view..");
             foreach (var v in miniFridgePositions)
             {
                 int x = 0;
@@ -187,19 +162,16 @@ namespace ExpandedFridge
                 ModEntry.DebugLog("Moved mini-fridge from X:" + v.X + " Y:" + v.Y + " to X:" + newPosition.X +  " Y:" + newPosition.Y);
             }
 
-            ModEntry.DebugLog("Finished moving mini-fridges!");
+            ModEntry.DebugLog(location.name + " Finished!");
         }
 
-        //* Moves all mini fridges in all farmhouses into map bounds.
-        public static void ShowMiniFridgesInLocation(GameLocation location)
+        //* Moves all mini fridges in the location back into map bounds.
+        private static void ShowMiniFridgesInLocation(GameLocation location)
         {
-            List<Vector2> miniFridgePositions = new List<Vector2>();
-
             //* find all mini-fridges positions.
+            List<Vector2> miniFridgePositions = new List<Vector2>();
             foreach(StardewValley.Object obj in location.objects.Values){
-
-                if (obj != null && obj.bigCraftable.Value && obj is Chest && obj.ParentSheetIndex == MiniFridgeSheetIndex)
-                {
+                if (obj != null && obj.bigCraftable.Value && obj is Chest && obj.ParentSheetIndex == MiniFridgeSheetIndex){
                     Chest chest_tmp = obj as Chest;
                     if (!IsPointInsideMapBounds(chest_tmp.TileLocation, location)){
                         miniFridgePositions.Add(chest_tmp.TileLocation);
@@ -207,11 +179,17 @@ namespace ExpandedFridge
                 }
             }
 
-            ModEntry.DebugLog("Begin moving mini-fridges into view..");
+            //* Quit here if we dont have any mini-fridges
+            if (miniFridgePositions.Count == 0){
+                ModEntry.DebugLog("No mini-fridges found!");
+                return;
+            }
+
+            //* Move them
+            ModEntry.DebugLog("Moving mini-fridges back into view..");
             foreach (Vector2 v in miniFridgePositions)
             {
                 Vector2 newPosition = GetFreeTileInLocation(location);
-                
                 StardewValley.Object obj = location.objects[v];
                 obj.tileLocation.Value = newPosition;
 
@@ -221,9 +199,7 @@ namespace ExpandedFridge
                 ModEntry.DebugLog("Moved mini-fridge from X:" + v.X + " Y:" + v.Y + " to X:" + newPosition.X +  " Y:" + newPosition.Y);
                 
             }
-            ModEntry.DebugLog("Finished moving mini-fridges!");
-
+            ModEntry.DebugLog(location.name + " Finished!");
         }
-
     }
 }

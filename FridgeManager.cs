@@ -28,7 +28,7 @@ namespace ExpandedFridge
             _entry.Helper.Events.GameLoop.DayStarted += OnDayStarted;
             _entry.Helper.Events.GameLoop.DayEnding += OnDayEnding;
             
-            ModEntry.DebugLog("FridgeManager Running.");
+            ModEntry.DebugLog("FridgeManager is now running.", LogLevel.Warn);
 
         }
 
@@ -48,19 +48,68 @@ namespace ExpandedFridge
                 ModEntry.DebugLog("Singleplayer mode detected.");
             }
         }
-
+        //* Get an array of all locations that have fridges.
+        //WARNING: If not on Master Game it could miss locations with fridges.
+        //* Must use request locations or other way to ensure all locations on remote players.
         public static GameLocation[] GetFridgeLocations(){
 
             List<GameLocation> gLocations = new List<GameLocation>();
             if(Game1.IsMultiplayer){
                 //* Check Locations for Multiplayer.
                 foreach (GameLocation location in _entry.Helper.Multiplayer.GetActiveLocations()){
-                    gLocations.Add(location);
+                    //* FarmHouse has a fridge, but check it is enabled.
+                    if((location is FarmHouse) && (location as FarmHouse).upgradeLevel > 0){
+                        gLocations.Add(location);
+                    }
+                    //* There can be multiplayer cabins on Farm
+                    else if (location is Farm){
+                        var bFoundCabin = false;
+                        foreach (var building in (location as Farm).buildings){
+                            //* Check cabins for enabled fridges.
+                            if (building.isCabin && building.daysOfConstructionLeft.Value <= 0 && (building.indoors.Value as FarmHouse).upgradeLevel > 0){
+                                bFoundCabin = true;
+                            }
+                        }
+                        if(bFoundCabin){
+                            gLocations.Add(location);
+                        }
+                    }
+                    //* Ginger Island. Another fridge location!
+                    else if (location is IslandFarmHouse){
+                        IslandFarmHouse GingerFarm = location as IslandFarmHouse;
+                        //TODO: Test this on a savegame without ginger island unlocked.
+                        if(GingerFarm.visited.Value){
+                            gLocations.Add(location);
+                        }
+                    }
                 }
             }else{
                 //* Check locations for Singleplayer.
                 foreach (GameLocation location in Game1.locations){
-                    gLocations.Add(location);
+                    //* FarmHouse has a fridge, but check it is enabled.
+                    if((location is FarmHouse) && (location as FarmHouse).upgradeLevel > 0){
+                        gLocations.Add(location);
+                    }
+                    //* There can be multiplayer cabins on Farm
+                    else if (location is Farm){
+                        var bFoundCabin = false;
+                        foreach (var building in (location as Farm).buildings){
+                            //* Check cabins for enabled fridges.
+                            if (building.isCabin && building.daysOfConstructionLeft.Value <= 0 && (building.indoors.Value as FarmHouse).upgradeLevel > 0){
+                                bFoundCabin = true;
+                            }
+                        }
+                        if(bFoundCabin){
+                            gLocations.Add(location);
+                        }
+                    }
+                    //* Ginger Island. Another fridge location!
+                    else if (location is IslandFarmHouse){
+                        IslandFarmHouse GingerFarm = location as IslandFarmHouse;
+                        if(GingerFarm.visited.Value){
+                            gLocations.Add(location);
+                        }
+                    }
                 }
             }
             return gLocations.ToArray();
@@ -87,7 +136,8 @@ namespace ExpandedFridge
         {
             if (Game1.IsMasterGame && _entry.Config.HideMiniFridges)
             {
-                modUtilities.MoveMiniFridgesOutOfMapBounds();
+                ModEntry.DebugLog("OnDayStarted(): Hiding mini-fridges from view.", LogLevel.Warn);
+                modUtilities.MoveAllMiniFridges(true);
             }
         }
         
@@ -96,8 +146,8 @@ namespace ExpandedFridge
         {
             if (Game1.IsMasterGame && _entry.Config.HideMiniFridges)
             {
-                modUtilities.MoveMiniFridgesOutOfMapBounds();
-                modUtilities.MoveMiniFridgesIntoMapBounds();
+                ModEntry.DebugLog("OnDayEnding(): move mini-fridges back for saving.", LogLevel.Warn);
+                modUtilities.MoveAllMiniFridges(false);
             }
         }
         //* Is given menu of a main fridge in same location.
@@ -129,6 +179,7 @@ namespace ExpandedFridge
         //* Updates the menu reference of the fridge.
         private void OnFridgeUpdated(ItemGrabMenu menu)
         {
+            ModEntry.DebugLog("Fridge tab changed.");
             _menu = menu;
         }
 
@@ -158,6 +209,7 @@ namespace ExpandedFridge
         {
 
             if (modUtilities.CurrentLocation is FarmHouse){
+                //TODO: Test if this includes the cabins
                 var farmHouse = modUtilities.CurrentLocation as FarmHouse;
                 var miniFridges = modUtilities.GetAllMiniFridgesInLocation(farmHouse);
                 _fridges.Add(farmHouse.fridge);
