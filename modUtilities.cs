@@ -111,7 +111,6 @@ namespace ExpandedFridge
                 }
                 //* Ginger Island
                 else if (location is IslandFarmHouse){
-                    //TODO: Test this on a savegame without ginger island unlocked.
                     ModEntry.DebugLog("Found a fridge at: " + location.Name);
                     if (bHide){
                         HideMiniFridgesInLocation(location);
@@ -154,13 +153,10 @@ namespace ExpandedFridge
                     newPosition.X = ++x;
 
                 StardewValley.Object obj = location.objects[v];
-
-                //*NOTE: warning AvoidNetField: 'obj.tileLocation' is a NetVector2 field; consider using the TileLocation property instead. See https://smapi.io/package/avoid-net-field for details.
-                obj.tileLocation.Value = newPosition;
+                obj.TileLocation = newPosition;
 
                 location.objects.Remove(v);
                 location.objects.Add(newPosition, obj);
-
                 ModEntry.DebugLog("Moved mini-fridge from X:" + v.X + " Y:" + v.Y + " to X:" + newPosition.X +  " Y:" + newPosition.Y);
             }
 
@@ -191,14 +187,12 @@ namespace ExpandedFridge
             ModEntry.DebugLog("Moving mini-fridges back into view..");
             foreach (Vector2 v in miniFridgePositions)
             {
-                //*NOTE: warning AvoidNetField: 'obj.tileLocation' is a NetVector2 field; consider using the TileLocation property instead. See https://smapi.io/package/avoid-net-field for details.
                 Vector2 newPosition = GetFreeTileInLocation(location);
                 StardewValley.Object obj = location.objects[v];
-                obj.tileLocation.Value = newPosition;
+                obj.TileLocation = newPosition;
 
                 location.objects.Remove(v);
                 location.objects.Add(newPosition, obj);
-
                 ModEntry.DebugLog("Moved mini-fridge from X:" + v.X + " Y:" + v.Y + " to X:" + newPosition.X +  " Y:" + newPosition.Y);
                 
             }
