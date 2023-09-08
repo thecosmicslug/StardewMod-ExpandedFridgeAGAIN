@@ -1,0 +1,14 @@
+{
+    "Config.ShowDebugMessages": "Enable Debug Logging.",
+    "Config.ShowDebugMessagesDesc": "Output debug logs to SMAPI Console to help bugfinding.",
+    "Config.HideMiniFridges": "Hide mini-fridges.",
+    "Config.HideMiniFridgesDesc": "Hide mini-fridges outside of the map each morning.",
+    "Config.NextFridgeTabButton": "Next Fridge Key.",
+    "Config.NextFridgeTabButtonDesc": "Button to navigate to next tab.",
+    "Config.LastFridgeTabButton": "Prev Fridge Key.",
+    "Config.LastFridgeTabButtonDesc": "Button to navigate to previous tab.",
+    "Config.BetterChestSupport": "Enable 'BetterChest' support.",
+    "Config.BetterChestSupportDesc": "Moves the fridge tabs out of the way. (WIP) Still testing!"
+
+}
+

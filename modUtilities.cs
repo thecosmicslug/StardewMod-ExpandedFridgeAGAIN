@@ -7,6 +7,7 @@ using StardewValley.Locations;
 using Microsoft.Xna.Framework;
 using System.Collections.Specialized;
 using System.Runtime.InteropServices;
+using StardewModdingAPI;
 
 namespace ExpandedFridge
 {
@@ -42,7 +43,7 @@ namespace ExpandedFridge
             while (location.isObjectAtTile(x, y))
                 y++;
 
-            ModEntry.DebugLog("Warning, object might become placed out of bounds at tile x:" + x + ", y:" + y + " in location: " + location.Name, StardewModdingAPI.LogLevel.Warn);
+            ModEntry.DebugLog("WARNING: Object might become placed out of bounds at tile X:" + x + " Y:" + y + " in " + location.Name, LogLevel.Warn);
 
             //* return that position
             return new Vector2(x, y);
@@ -83,46 +84,8 @@ namespace ExpandedFridge
             return miniFridges.ToArray();
         }
         
-        public static void MoveAllMiniFridges(bool bHide)
-        {
-            ModEntry.DebugLog("Searching for fridge locations...");
-            foreach (GameLocation location in FridgeManager.GetFridgeLocations()){
-                //* Farm House
-                if(location is FarmHouse){
-                    ModEntry.DebugLog("Found a fridge at: " + location.Name);
-                    if (bHide){
-                        HideMiniFridgesInLocation(location);
-                    }else{
-                        ShowMiniFridgesInLocation(location);
-                    }
-                }
-                //* Farm Cabins
-                else if (location is Farm){
-                    foreach (var building in (location as Farm).buildings){
-                        if (building.isCabin && building.daysOfConstructionLeft.Value <= 0 && (building.indoors.Value as FarmHouse).upgradeLevel > 0){
-                            ModEntry.DebugLog("Found a fridge at: " + location.Name);
-                            if (bHide){
-                                HideMiniFridgesInLocation(location);
-                            }else{
-                                ShowMiniFridgesInLocation(location);
-                            }
-                        }
-                    }
-                }
-                //* Ginger Island
-                else if (location is IslandFarmHouse){
-                    ModEntry.DebugLog("Found a fridge at: " + location.Name);
-                    if (bHide){
-                        HideMiniFridgesInLocation(location);
-                    }else{
-                        ShowMiniFridgesInLocation(location);
-                    }
-                }
-            }  
-        }
-
         //* Moves all mini fridges in all farmhouses out of the map bounds.
-        private static void HideMiniFridgesInLocation(GameLocation location)
+        public static void HideMiniFridgesInLocation(GameLocation location)
         {
             List<Vector2> miniFridgePositions = new List<Vector2>();
 
@@ -138,7 +101,7 @@ namespace ExpandedFridge
 
             //* Quit here if we dont have any mini-fridges
             if (miniFridgePositions.Count == 0){
-                ModEntry.DebugLog("No mini-fridges found!");
+                ModEntry.DebugLog("No mini-fridges found!", LogLevel.Info);
                 return;
             }
             
@@ -160,11 +123,11 @@ namespace ExpandedFridge
                 ModEntry.DebugLog("Moved mini-fridge from X:" + v.X + " Y:" + v.Y + " to X:" + newPosition.X +  " Y:" + newPosition.Y);
             }
 
-            ModEntry.DebugLog(location.Name + " Finished!");
+            ModEntry.DebugLog(location.Name + " Finished!", LogLevel.Info);
         }
 
         //* Moves all mini fridges in the location back into map bounds.
-        private static void ShowMiniFridgesInLocation(GameLocation location)
+        public static void ShowMiniFridgesInLocation(GameLocation location)
         {
             //* find all mini-fridges positions.
             List<Vector2> miniFridgePositions = new List<Vector2>();
@@ -179,7 +142,7 @@ namespace ExpandedFridge
 
             //* Quit here if we dont have any mini-fridges
             if (miniFridgePositions.Count == 0){
-                ModEntry.DebugLog("No mini-fridges found!");
+                ModEntry.DebugLog("No mini-fridges found!", LogLevel.Info);
                 return;
             }
 
@@ -196,7 +159,7 @@ namespace ExpandedFridge
                 ModEntry.DebugLog("Moved mini-fridge from X:" + v.X + " Y:" + v.Y + " to X:" + newPosition.X +  " Y:" + newPosition.Y);
                 
             }
-            ModEntry.DebugLog(location.Name + " Finished!");
+            ModEntry.DebugLog(location.Name + " Finished!", LogLevel.Info);
         }
     }
 }

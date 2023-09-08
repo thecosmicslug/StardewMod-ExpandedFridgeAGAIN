@@ -29,18 +29,18 @@ namespace ExpandedFridge
             _entry.Helper.Events.GameLoop.DayStarted += OnDayStarted;
             _entry.Helper.Events.GameLoop.DayEnding += OnDayEnding;
             
-            ModEntry.DebugLog("FridgeManager is now running.", LogLevel.Warn);
+            ModEntry.DebugLog("FridgeManager is now running.", LogLevel.Info);
 
         }
 
         //* Get Locations
         //TODO: Need to test split-screen & multiplayer.
-        public void MultiplayerMode(){
-            if(Game1.IsMultiplayer){
-                if (LocalMultiplayer.IsLocalMultiplayer()){
+        private static void MultiplayerMode(){
+            if(Context.IsMultiplayer){
+                if (Context.IsSplitScreen){
                     ModEntry.DebugLog("Multiplayer (Split Screen) detected.");
                 }
-                else if (Game1.IsMasterGame){
+                else if (Context.IsMainPlayer){
                     ModEntry.DebugLog("Multiplayer (Host) detected.");
                 }else{
                     ModEntry.DebugLog("Multiplayer (Client) detected.");
@@ -49,13 +49,54 @@ namespace ExpandedFridge
                 ModEntry.DebugLog("Singleplayer mode detected.");
             }
         }
+
+        private static void MoveAllMiniFridges(bool bHide)
+        {
+            ModEntry.DebugLog("Searching for fridge locations...");
+            foreach (GameLocation location in GetFridgeLocations()){
+                //* Farm House
+                if(location is FarmHouse){
+                    ModEntry.DebugLog("Found a fridge at: " + location.Name);
+                    if (bHide){
+                        modUtilities.HideMiniFridgesInLocation(location);
+                    }else{
+                        modUtilities.ShowMiniFridgesInLocation(location);
+                    }
+                }
+                //* Farm Cabins
+                else if (location is Farm){
+                    foreach (var building in (location as Farm).buildings){
+                        if (building.isCabin && building.daysOfConstructionLeft.Value <= 0 && (building.indoors.Value as FarmHouse).upgradeLevel > 0){
+                            ModEntry.DebugLog("Found a fridge at: " + location.Name);
+                            if (bHide){
+                                modUtilities.HideMiniFridgesInLocation(location);
+                            }else{
+                                modUtilities.ShowMiniFridgesInLocation(location);
+                            }
+                        }
+                    }
+                }
+                //* Ginger Island
+                else if (location is IslandFarmHouse){
+                    ModEntry.DebugLog("Found a fridge at: " + location.Name);
+                    if (bHide){
+                        modUtilities.HideMiniFridgesInLocation(location);
+                    }else{
+                        modUtilities.ShowMiniFridgesInLocation(location);
+                    }
+                }
+            }  
+        }
+
         //* Get an array of all locations that have fridges.
         //WARNING: If not on Master Game it could miss locations with fridges.
-        //* Must use request locations or other way to ensure all locations on remote players.
-        public static GameLocation[] GetFridgeLocations(){
+        private static GameLocation[] GetFridgeLocations(){
+            MultiplayerMode();
 
+            // Utility.ForAllLocations(location)
+            //TODO: Test locations in multiplayer some more.
             List<GameLocation> gLocations = new List<GameLocation>();
-            if(Game1.IsMultiplayer){
+            if(Context.IsMultiplayer){
                 //* Check Locations for Multiplayer.
                 foreach (GameLocation location in _entry.Helper.Multiplayer.GetActiveLocations()){
                     //* FarmHouse has a fridge, but check it is enabled.
@@ -137,8 +178,8 @@ namespace ExpandedFridge
         {
             if (Game1.IsMasterGame && _entry.Config.HideMiniFridges)
             {
-                ModEntry.DebugLog("OnDayStarted(): Hiding mini-fridges from view.", LogLevel.Warn);
-                modUtilities.MoveAllMiniFridges(true);
+                ModEntry.DebugLog("OnDayStarted(): Hiding mini-fridges from view.", LogLevel.Info);
+                MoveAllMiniFridges(true);
             }
         }
         
@@ -147,8 +188,8 @@ namespace ExpandedFridge
         {
             if (Game1.IsMasterGame && _entry.Config.HideMiniFridges)
             {
-                ModEntry.DebugLog("OnDayEnding(): move mini-fridges back for saving.", LogLevel.Warn);
-                modUtilities.MoveAllMiniFridges(false);
+                ModEntry.DebugLog("OnDayEnding(): move mini-fridges back for saving.", LogLevel.Info);
+                MoveAllMiniFridges(false);
             }
         }
         //* Is given menu of a main fridge in same location.
@@ -390,7 +431,7 @@ namespace ExpandedFridge
                 IClickableMenu.drawTextureBox(e.SpriteBatch, Game1.menuTexture, new Rectangle(0, 256, 60, 60), xpos, tab.bounds.Y, tab.bounds.Width, tab.bounds.Height, _selectedTab == index ? Color.White : new Color(0.3f, 0.3f, 0.3f, 1f), 1, false);
                 Color tabCol = index == 0 ? Color.BurlyWood : _fridgeTabsColors[index] == Color.Black ? Color.BurlyWood : _fridgeTabsColors[index];
                 e.SpriteBatch.Draw(Game1.staminaRect, new Rectangle(xpos + colorOffsetX, tab.bounds.Y + colorOffsetY, (int)(tab.bounds.Width * colorSizeModX), (int)(tab.bounds.Height * colorSizeModY)), tabCol);
-                //NOTE: Make compatible with 'Better Chests' here?.
+                //NOTE: Make compatible with 'Better Chests' here ??
                 if (index == 0)
                 {
                     const float scaleSize = 2f;
