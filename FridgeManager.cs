@@ -5,18 +5,21 @@ using StardewValley.Network;
 using StardewValley.Locations;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+
+//TODO: Add Github update key before uploading to nexus.
 
 namespace ExpandedFridge
 {
     //* Handles the tracking and implementation of managing mini fridges in each farmhouse so they can be hidden and accessed from the main fridge.
     public class FridgeManager
     {
-
-        private ModEntry _entry = null;
+        private static ModEntry _entry = null;
         private List<Chest> _fridges = new List<Chest>();
+        bool _inFridgeMenu = false;
 
         //* Constructor starts tracking needed event for tracking fridge inventory menu.
         public FridgeManager(ModEntry entry)
@@ -25,10 +28,77 @@ namespace ExpandedFridge
             _entry.Helper.Events.Display.MenuChanged += OnMenuChanged;
             _entry.Helper.Events.GameLoop.DayStarted += OnDayStarted;
             _entry.Helper.Events.GameLoop.DayEnding += OnDayEnding;
-            ModEntry.DebugLog("FridgeManager created");
+            
+            //* Show our settings for the debug log.
+            ModEntry.DebugLog("FridgeManager is now running.", LogLevel.Info);
+            if (_entry.Config.HideMiniFridges){
+                ModEntry.DebugLog("Mini-fridges are set to be hidden each day.", LogLevel.Info);
+            }else{
+                ModEntry.DebugLog("Mini-fridges are set to remain visible.", LogLevel.Info);
+            }
+            if (_entry.Config.BetterChestSupport){
+                ModEntry.DebugLog("Experimental 'BetterChests' support is enabled.", LogLevel.Info);
+            }
+
+        }
+        //* Main function that manages the mini-fridges each save.
+        private static void MoveAllMiniFridges(bool bHide)
+        {
+            ModEntry.DebugLog("Searching for fridge locations...");
+            foreach (GameLocation location in GetFridgeLocations()){
+                //* Farm House & Multiplayer cabins
+                if(location is FarmHouse){
+                    ModEntry.DebugLog("Found a fridge at: " + location.NameOrUniqueName);
+                    if (bHide){
+                        modUtilities.HideMiniFridgesInLocation(location);
+                    }else{
+                        modUtilities.ShowMiniFridgesInLocation(location);
+                    }
+                }
+                //* Ginger Island Farm House
+                else if (location is IslandFarmHouse){
+                    ModEntry.DebugLog("Found a fridge at: " + location.NameOrUniqueName);
+                    if (bHide){
+                        modUtilities.HideMiniFridgesInLocation(location);
+                    }else{
+                        modUtilities.ShowMiniFridgesInLocation(location);
+                    }
+                }
+            }  
         }
 
-        bool _inFridgeMenu = false;
+        //* Get an array of all locations that have fridges.
+        //WARNING: If not on Master Game it could miss locations with fridges.
+        private static GameLocation[] GetFridgeLocations(){
+            
+            //* Check Locations has changed with v1.5
+            List<GameLocation> gLocations = new List<GameLocation>();
+
+            Utility.ForAllLocations((GameLocation location) =>{
+                //* FarmHouse has a fridge, but check it is enabled.
+                if((location is FarmHouse) && (location as FarmHouse).upgradeLevel > 0){
+                    gLocations.Add(location);
+                }
+                //* There can be multiplayer cabins on Farm
+                else if (location is Farm){
+                    foreach (var building in (location as Farm).buildings){
+                        //* Check cabins for enabled fridges.
+                        if (building.isCabin && building.daysOfConstructionLeft.Value <= 0 && (building.indoors.Value as FarmHouse).upgradeLevel > 0){
+                            gLocations.Add(location as Cabin);
+                        }
+                    }
+                }
+                //* Ginger Island. Another fridge location!
+                else if (location is IslandFarmHouse){
+                    IslandFarmHouse GingerFarm = location as IslandFarmHouse;
+                    //* only if we have unlocked the farmhouse
+                    if(GingerFarm.visited.Value){
+                        gLocations.Add(location);
+                    }
+                }
+            });
+            return gLocations.ToArray();
+        }
 
         //* Detects fridge menu status and invokes OnFridge methods.
         private void OnMenuChanged(object sender, MenuChangedEventArgs e)
@@ -51,7 +121,8 @@ namespace ExpandedFridge
         {
             if (Game1.IsMasterGame && _entry.Config.HideMiniFridges)
             {
-                modUtilities.MoveMiniFridgesOutOfMapBounds();
+                ModEntry.DebugLog("OnDayStarted(): Hiding mini-fridges from view.", LogLevel.Info);
+                MoveAllMiniFridges(true);
             }
         }
         
@@ -60,8 +131,8 @@ namespace ExpandedFridge
         {
             if (Game1.IsMasterGame && _entry.Config.HideMiniFridges)
             {
-                modUtilities.MoveMiniFridgesOutOfMapBounds();
-                modUtilities.MoveMiniFridgesIntoMapBounds();
+                ModEntry.DebugLog("OnDayEnding(): Move mini-fridges back for saving.", LogLevel.Info);
+                MoveAllMiniFridges(false);
             }
         }
         //* Is given menu of a main fridge in same location.
@@ -69,6 +140,8 @@ namespace ExpandedFridge
         {
             if (menu is ItemGrabMenu && modUtilities.CurrentLocation is FarmHouse)
                 return (menu as ItemGrabMenu).context == (modUtilities.CurrentLocation as FarmHouse).fridge.Value;
+            if (menu is ItemGrabMenu && modUtilities.CurrentLocation is IslandFarmHouse)
+                return (menu as ItemGrabMenu).context == (modUtilities.CurrentLocation as IslandFarmHouse).fridge.Value;
             return false;
         }
 
@@ -91,8 +164,8 @@ namespace ExpandedFridge
         //* Updates the menu reference of the fridge.
         private void OnFridgeUpdated(ItemGrabMenu menu)
         {
+            ModEntry.DebugLog("Fridge tab changed.");
             _menu = menu;
-            ModEntry.DebugLog("Fridge updated");
         }
 
         //* Releases custom menu, mutexes and unsubscribes events.
@@ -119,19 +192,29 @@ namespace ExpandedFridge
         //* Initiates custom menu with references and events.
         private void OnFridgeOpened(ItemGrabMenu menu)
         {
-            var farmHouse = modUtilities.CurrentLocation as FarmHouse;
-            var miniFridges = modUtilities.GetAllMiniFridgesInLocation(farmHouse);
-            
+
+            if (modUtilities.CurrentLocation is FarmHouse){
+                var farmHouse = modUtilities.CurrentLocation as FarmHouse;
+                var miniFridges = modUtilities.GetAllMiniFridgesInLocation(farmHouse);
+                _fridges.Add(farmHouse.fridge.Value);
+                _fridges.AddRange(miniFridges);
+                ModEntry.DebugLog("Fridge opened in " + farmHouse.NameOrUniqueName);
+            }
+            else if (modUtilities.CurrentLocation is IslandFarmHouse){
+                var farmHouse = modUtilities.CurrentLocation as IslandFarmHouse;
+                var miniFridges = modUtilities.GetAllMiniFridgesInLocation(farmHouse);
+                _fridges.Add(farmHouse.fridge.Value);
+                _fridges.AddRange(miniFridges);
+                ModEntry.DebugLog("Fridge opened in " + farmHouse.NameOrUniqueName);
+            }
+
             _menu = menu;
-            _fridges.Add(farmHouse.fridge);
-            _fridges.AddRange(miniFridges);
             _entry.Helper.Events.Display.RenderingActiveMenu += DrawBeforeActiveMenu;
             _entry.Helper.Events.Input.ButtonPressed += RecieveButtonPressed;
             _entry.Helper.Events.Input.MouseWheelScrolled += RecieveMouseWheelScrolled;
             UpdateCustomComponents();
             _customMenuInitiated = true;
 
-            ModEntry.DebugLog("Fridge opened");
         }
 
         //* Components for inventory tabs.
@@ -164,7 +247,7 @@ namespace ExpandedFridge
             for (int ii = 0; ii < _fridges.Count; ii++)
             {
                 _fridgeTabs.Add(new ClickableComponent(new Rectangle(labelX + Game1.tileSize * i, labelY, Game1.tileSize, Game1.tileSize), (i).ToString(), (i++).ToString()));
-                _fridgeTabsColors.Add(_fridges[ii].playerChoiceColor);
+                _fridgeTabsColors.Add(_fridges[ii].playerChoiceColor.Value);
             }
 
             //* left right arrow components for scrolling
@@ -274,7 +357,7 @@ namespace ExpandedFridge
                 _updateTabColors = false;
                 _fridgeTabsColors.Clear();
                 foreach (var c in _fridges)
-                    _fridgeTabsColors.Add(c.playerChoiceColor);
+                    _fridgeTabsColors.Add(c.playerChoiceColor.Value);
             }
 
             //* draw tabs
@@ -290,7 +373,7 @@ namespace ExpandedFridge
                 IClickableMenu.drawTextureBox(e.SpriteBatch, Game1.menuTexture, new Rectangle(0, 256, 60, 60), xpos, tab.bounds.Y, tab.bounds.Width, tab.bounds.Height, _selectedTab == index ? Color.White : new Color(0.3f, 0.3f, 0.3f, 1f), 1, false);
                 Color tabCol = index == 0 ? Color.BurlyWood : _fridgeTabsColors[index] == Color.Black ? Color.BurlyWood : _fridgeTabsColors[index];
                 e.SpriteBatch.Draw(Game1.staminaRect, new Rectangle(xpos + colorOffsetX, tab.bounds.Y + colorOffsetY, (int)(tab.bounds.Width * colorSizeModX), (int)(tab.bounds.Height * colorSizeModY)), tabCol);
-                //TODO: Make compatible with 'Better Chests'.
+                //NOTE: Make compatible with 'Better Chests' here ??
                 if (index == 0)
                 {
                     const float scaleSize = 2f;
