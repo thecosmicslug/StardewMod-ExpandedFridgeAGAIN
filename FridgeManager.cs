@@ -29,6 +29,7 @@ namespace ExpandedFridge
             _entry.Helper.Events.GameLoop.DayStarted += OnDayStarted;
             _entry.Helper.Events.GameLoop.DayEnding += OnDayEnding;
             
+            //* Show our settings for the debug log.
             ModEntry.DebugLog("FridgeManager is now running.", LogLevel.Info);
             if (_entry.Config.HideMiniFridges){
                 ModEntry.DebugLog("Mini-fridges are set to be hidden each day.", LogLevel.Info);
@@ -45,7 +46,7 @@ namespace ExpandedFridge
         {
             ModEntry.DebugLog("Searching for fridge locations...");
             foreach (GameLocation location in GetFridgeLocations()){
-                //* Farm House
+                //* Farm House & Multiplayer cabins
                 if(location is FarmHouse){
                     ModEntry.DebugLog("Found a fridge at: " + location.NameOrUniqueName);
                     if (bHide){
@@ -54,21 +55,7 @@ namespace ExpandedFridge
                         modUtilities.ShowMiniFridgesInLocation(location);
                     }
                 }
-                //* Farm Cabins
-                else if (location is Farm){
-                    foreach (var building in (location as Farm).buildings){
-                        if (building.isCabin && building.daysOfConstructionLeft.Value <= 0 && (building.indoors.Value as FarmHouse).upgradeLevel > 0){
-                            Cabin cabin = building.indoors.Value as Cabin;
-                            ModEntry.DebugLog("Found a fridge at: " + (building.indoors.Value as Cabin).NameOrUniqueName);
-                            if (bHide){
-                                modUtilities.HideMiniFridgesInLocation(cabin);
-                            }else{
-                                modUtilities.ShowMiniFridgesInLocation(cabin);
-                            }
-                        }
-                    }
-                }
-                //* Ginger Island
+                //* Ginger Island Farm House
                 else if (location is IslandFarmHouse){
                     ModEntry.DebugLog("Found a fridge at: " + location.NameOrUniqueName);
                     if (bHide){
@@ -104,6 +91,7 @@ namespace ExpandedFridge
                 //* Ginger Island. Another fridge location!
                 else if (location is IslandFarmHouse){
                     IslandFarmHouse GingerFarm = location as IslandFarmHouse;
+                    //* only if we have unlocked the farmhouse
                     if(GingerFarm.visited.Value){
                         gLocations.Add(location);
                     }
@@ -143,7 +131,7 @@ namespace ExpandedFridge
         {
             if (Game1.IsMasterGame && _entry.Config.HideMiniFridges)
             {
-                ModEntry.DebugLog("OnDayEnding(): move mini-fridges back for saving.", LogLevel.Info);
+                ModEntry.DebugLog("OnDayEnding(): Move mini-fridges back for saving.", LogLevel.Info);
                 MoveAllMiniFridges(false);
             }
         }
@@ -206,7 +194,6 @@ namespace ExpandedFridge
         {
 
             if (modUtilities.CurrentLocation is FarmHouse){
-                //TODO: Test if this includes the cabins
                 var farmHouse = modUtilities.CurrentLocation as FarmHouse;
                 var miniFridges = modUtilities.GetAllMiniFridgesInLocation(farmHouse);
                 _fridges.Add(farmHouse.fridge.Value);
