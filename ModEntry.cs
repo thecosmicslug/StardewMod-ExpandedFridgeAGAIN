@@ -20,7 +20,7 @@ namespace ExpandedFridge
             //* Load Config
             _instance = this;
             Config = Helper.ReadConfig<ModConfig>();
-            DebugLog("Configuration file Loaded.");
+            DebugLog("Configuration loaded from 'config.json'");
 
             //* Prepare Event Hooks
             Helper.Events.GameLoop.GameLaunched += onLaunched;
@@ -32,16 +32,23 @@ namespace ExpandedFridge
         {
             //* Hook into GMCM
             var api = Helper.ModRegistry.GetApi<GenericModConfigMenuAPI>("spacechase0.GenericModConfigMenu");
-            api.RegisterModConfig(ModManifest, () => Config = new ModConfig(), () => Helper.WriteConfig(Config));
+            if (api != null){
 
-            //* Our Options
-            api.SetDefaultIngameOptinValue(ModManifest, true);
-            api.RegisterSimpleOption(ModManifest, Helper.Translation.Get("Config.ShowDebugMessages"), Helper.Translation.Get("Config.ShowDebugMessagesDesc"), () => Config.ShowDebugMessages, (bool val) => Config.ShowDebugMessages = val);
-            api.RegisterSimpleOption(ModManifest, Helper.Translation.Get("Config.HideMiniFridges"), Helper.Translation.Get("Config.HideMiniFridgesDesc"), () => Config.HideMiniFridges, (bool val) => Config.HideMiniFridges = val);
-            api.RegisterSimpleOption(ModManifest, Helper.Translation.Get("Config.BetterChestSupport"), Helper.Translation.Get("Config.BetterChestSupportDesc"), () => Config.BetterChestSupport, (bool val) => Config.BetterChestSupport = val);
-            api.RegisterSimpleOption(ModManifest, Helper.Translation.Get("Config.NextFridgeTabButton"), Helper.Translation.Get("Config.NextFridgeTabButtonDesc"), () => Config.NextFridgeTabButton, (SButton val) => Config.NextFridgeTabButton = val);
-            api.RegisterSimpleOption(ModManifest, Helper.Translation.Get("Config.LastFridgeTabButton"), Helper.Translation.Get("Config.LastFridgeTabButtonDesc"), () => Config.LastFridgeTabButton, (SButton val) => Config.LastFridgeTabButton = val);
-            DebugLog("GenericModConfigMenu setup completed.");
+                api.RegisterModConfig(ModManifest, () => Config = new ModConfig(), () => Helper.WriteConfig(Config));
+
+                //* Our Options
+                api.SetDefaultIngameOptinValue(ModManifest, true);
+                api.RegisterSimpleOption(ModManifest, Helper.Translation.Get("Config.ShowDebugMessages"), Helper.Translation.Get("Config.ShowDebugMessagesDesc"), () => Config.ShowDebugMessages, (bool val) => Config.ShowDebugMessages = val);
+                api.RegisterSimpleOption(ModManifest, Helper.Translation.Get("Config.HideMiniFridges"), Helper.Translation.Get("Config.HideMiniFridgesDesc"), () => Config.HideMiniFridges, (bool val) => Config.HideMiniFridges = val);
+                api.RegisterSimpleOption(ModManifest, Helper.Translation.Get("Config.BetterChestSupport"), Helper.Translation.Get("Config.BetterChestSupportDesc"), () => Config.BetterChestSupport, (bool val) => Config.BetterChestSupport = val);
+                api.RegisterSimpleOption(ModManifest, Helper.Translation.Get("Config.NextFridgeTabButton"), Helper.Translation.Get("Config.NextFridgeTabButtonDesc"), () => Config.NextFridgeTabButton, (SButton val) => Config.NextFridgeTabButton = val);
+                api.RegisterSimpleOption(ModManifest, Helper.Translation.Get("Config.LastFridgeTabButton"), Helper.Translation.Get("Config.LastFridgeTabButtonDesc"), () => Config.LastFridgeTabButton, (SButton val) => Config.LastFridgeTabButton = val);
+                DebugLog("GenericModConfigMenu setup completed.");
+
+            }else{ //* Could not find GenericModConfigMenu ??
+                DebugLog("GenericModConfigMenu not found. Configuration can be edited from 'config.json'");
+            }
+
         }
 
         //* The method invoked when the player loads a save.

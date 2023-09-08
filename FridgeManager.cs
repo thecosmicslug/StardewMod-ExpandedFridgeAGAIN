@@ -30,9 +30,17 @@ namespace ExpandedFridge
             _entry.Helper.Events.GameLoop.DayEnding += OnDayEnding;
             
             ModEntry.DebugLog("FridgeManager is now running.", LogLevel.Info);
+            if (_entry.Config.HideMiniFridges){
+                ModEntry.DebugLog("Mini-fridges are set to be hidden each day.", LogLevel.Info);
+            }else{
+                ModEntry.DebugLog("Mini-fridges are set to remain visible.", LogLevel.Info);
+            }
+            if (_entry.Config.BetterChestSupport){
+                ModEntry.DebugLog("Experimental 'BetterChests' support is enabled.", LogLevel.Info);
+            }
 
         }
-
+        //* Main function that manages the mini-fridges each save.
         private static void MoveAllMiniFridges(bool bHide)
         {
             ModEntry.DebugLog("Searching for fridge locations...");

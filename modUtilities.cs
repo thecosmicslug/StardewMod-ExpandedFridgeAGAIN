@@ -92,9 +92,8 @@ namespace ExpandedFridge
             //* find all mini-fridges positions.
             foreach(StardewValley.Object obj in location.objects.Values){
                 if (obj != null && obj.bigCraftable.Value && obj is Chest && obj.ParentSheetIndex == MiniFridgeSheetIndex){
-                    Chest chest_tmp = obj as Chest;
-                    if (IsPointInsideMapBounds(chest_tmp.TileLocation, location)){
-                        miniFridgePositions.Add(chest_tmp.TileLocation);
+                    if (IsPointInsideMapBounds(obj.TileLocation, location)){
+                        miniFridgePositions.Add(obj.TileLocation);
                     }
                 }
             }
@@ -133,9 +132,8 @@ namespace ExpandedFridge
             List<Vector2> miniFridgePositions = new List<Vector2>();
             foreach(StardewValley.Object obj in location.objects.Values){
                 if (obj != null && obj.bigCraftable.Value && obj is Chest && obj.ParentSheetIndex == MiniFridgeSheetIndex){
-                    Chest chest_tmp = obj as Chest;
-                    if (!IsPointInsideMapBounds(chest_tmp.TileLocation, location)){
-                        miniFridgePositions.Add(chest_tmp.TileLocation);
+                    if (!IsPointInsideMapBounds(obj.TileLocation, location)){
+                        miniFridgePositions.Add(obj.TileLocation);
                     }
                 }
             }
