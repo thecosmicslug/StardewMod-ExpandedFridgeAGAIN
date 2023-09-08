@@ -43,7 +43,7 @@ namespace ExpandedFridge
             while (location.isObjectAtTile(x, y))
                 y++;
 
-            ModEntry.DebugLog("WARNING: Object might become placed out of bounds at tile X:" + x + " Y:" + y + " in " + location.Name, LogLevel.Warn);
+            ModEntry.DebugLog("WARNING: Object might become placed out of bounds at tile X:" + x + " Y:" + y + " in " + location.NameOrUniqueName, LogLevel.Warn);
 
             //* return that position
             return new Vector2(x, y);
@@ -123,7 +123,7 @@ namespace ExpandedFridge
                 ModEntry.DebugLog("Moved mini-fridge from X:" + v.X + " Y:" + v.Y + " to X:" + newPosition.X +  " Y:" + newPosition.Y);
             }
 
-            ModEntry.DebugLog(location.Name + " Finished!", LogLevel.Info);
+            ModEntry.DebugLog(location.NameOrUniqueName + " Finished!", LogLevel.Info);
         }
 
         //* Moves all mini fridges in the location back into map bounds.
@@ -159,7 +159,7 @@ namespace ExpandedFridge
                 ModEntry.DebugLog("Moved mini-fridge from X:" + v.X + " Y:" + v.Y + " to X:" + newPosition.X +  " Y:" + newPosition.Y);
                 
             }
-            ModEntry.DebugLog(location.Name + " Finished!", LogLevel.Info);
+            ModEntry.DebugLog(location.NameOrUniqueName + " Finished!", LogLevel.Info);
         }
     }
 }
