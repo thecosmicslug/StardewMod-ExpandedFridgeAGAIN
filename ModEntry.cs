@@ -13,8 +13,9 @@ namespace ExpandedFridge
 
         public ModConfig Config { get; private set; }
         public FridgeManager FridgeManager { get; private set; }
+    
 
-        //* Setup instance and mini-fridge manager on Game Loading.
+        //* Setup instance and load our first event-hooks
         public override void Entry(IModHelper helper)
         {
             //* Load Config
@@ -27,7 +28,7 @@ namespace ExpandedFridge
             Helper.Events.GameLoop.SaveLoaded +=   onSaveLoaded;
         }
 
-         //* Setup for GenericModConfigMenu
+         //* Setup for GenericModConfigMenu support.
         private void onLaunched(object sender, GameLaunchedEventArgs e)
         {
             //* Hook into GMCM
@@ -40,7 +41,6 @@ namespace ExpandedFridge
                 api.SetDefaultIngameOptinValue(ModManifest, true);
                 api.RegisterSimpleOption(ModManifest, Helper.Translation.Get("Config.ShowDebugMessages"), Helper.Translation.Get("Config.ShowDebugMessagesDesc"), () => Config.ShowDebugMessages, (bool val) => Config.ShowDebugMessages = val);
                 api.RegisterSimpleOption(ModManifest, Helper.Translation.Get("Config.HideMiniFridges"), Helper.Translation.Get("Config.HideMiniFridgesDesc"), () => Config.HideMiniFridges, (bool val) => Config.HideMiniFridges = val);
-                api.RegisterSimpleOption(ModManifest, Helper.Translation.Get("Config.BetterChestSupport"), Helper.Translation.Get("Config.BetterChestSupportDesc"), () => Config.BetterChestSupport, (bool val) => Config.BetterChestSupport = val);
                 api.RegisterSimpleOption(ModManifest, Helper.Translation.Get("Config.NextFridgeTabButton"), Helper.Translation.Get("Config.NextFridgeTabButtonDesc"), () => Config.NextFridgeTabButton, (SButton val) => Config.NextFridgeTabButton = val);
                 api.RegisterSimpleOption(ModManifest, Helper.Translation.Get("Config.LastFridgeTabButton"), Helper.Translation.Get("Config.LastFridgeTabButtonDesc"), () => Config.LastFridgeTabButton, (SButton val) => Config.LastFridgeTabButton = val);
                 DebugLog("GenericModConfigMenu setup completed.");
@@ -48,17 +48,16 @@ namespace ExpandedFridge
             }else{ //* Could not find GenericModConfigMenu ??
                 DebugLog("GenericModConfigMenu not found. Configuration can be edited from 'config.json'");
             }
-
         }
 
-        //* The method invoked when the player loads a save.
+        //* The method invoked when the player loads a save. Start our FridgeManager class.
         private void onSaveLoaded(object sender, EventArgs e)
         {
-            //* Start FridgeManager
+            //* Start FridgeManager before the start of the first day.
             FridgeManager = new FridgeManager(_instance);
         }
 
-        //* Prints message in console log with given log level.
+        //* Prints message in console log with given log level if enabled.
         public static void DebugLog(string message, LogLevel level = LogLevel.Debug)
         {
             if (_instance.Config.ShowDebugMessages){

@@ -6,9 +6,7 @@
     "Config.NextFridgeTabButton": "Next Fridge Key.",
     "Config.NextFridgeTabButtonDesc": "Button to navigate to next tab.",
     "Config.LastFridgeTabButton": "Prev Fridge Key.",
-    "Config.LastFridgeTabButtonDesc": "Button to navigate to previous tab.",
-    "Config.BetterChestSupport": "Enable 'BetterChest' support.",
-    "Config.BetterChestSupportDesc": "Moves the fridge tabs out of the way. (WIP) Still testing!"
+    "Config.LastFridgeTabButtonDesc": "Button to navigate to previous tab."
 
 }
 

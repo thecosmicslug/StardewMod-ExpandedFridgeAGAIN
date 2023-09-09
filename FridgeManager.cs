@@ -17,9 +17,32 @@ namespace ExpandedFridge
     //* Handles the tracking and implementation of managing mini fridges in each farmhouse so they can be hidden and accessed from the main fridge.
     public class FridgeManager
     {
-        private static ModEntry _entry = null;
         private List<Chest> _fridges = new List<Chest>();
-        bool _inFridgeMenu = false;
+        private ModEntry _entry = null;
+        private ItemGrabMenu _menu = null;
+
+        private bool _inFridgeMenu = false;
+        private bool _customMenuInitiated = false;
+
+        //* Components for inventory tabs.
+        private List<ClickableComponent> _fridgeTabs = new List<ClickableComponent>();
+        private List<Color> _fridgeTabsColors = new List<Color>();
+        private ClickableTextureComponent _rightArrowButton;
+        private ClickableTextureComponent _leftArrowButton;
+
+        private int _selectedTab = 0;
+        private int _rootTab = 0;
+        private bool _updateTabColors = false;
+
+        //* Some constant offsets for adjusting positions of components.
+        private const float textOffsetX = Game1.tileSize * 0.35F;
+        private const float textOffsetY = Game1.tileSize * 0.38F;
+        private const float textOffsetYSelected = Game1.tileSize * 0.25F;
+        private const float textOffsetXSelected = Game1.tileSize * 0.32F;
+        private const int colorOffsetX = (int)(Game1.tileSize * 0.2F);
+        private const int colorOffsetY = (int)(Game1.tileSize * 0.2F);
+        private const float colorSizeModY = 0.65F;
+        private const float colorSizeModX = 0.625F;
 
         //* Constructor starts tracking needed event for tracking fridge inventory menu.
         public FridgeManager(ModEntry entry)
@@ -32,17 +55,14 @@ namespace ExpandedFridge
             //* Show our settings for the debug log.
             ModEntry.DebugLog("FridgeManager is now running.", LogLevel.Info);
             if (_entry.Config.HideMiniFridges){
-                ModEntry.DebugLog("Mini-fridges are set to be hidden each day.", LogLevel.Info);
+                ModEntry.DebugLog("Mini-fridges are set to be hidden each day.");
             }else{
-                ModEntry.DebugLog("Mini-fridges are set to remain visible.", LogLevel.Info);
-            }
-            if (_entry.Config.BetterChestSupport){
-                ModEntry.DebugLog("Experimental 'BetterChests' support is enabled.", LogLevel.Info);
+                ModEntry.DebugLog("Mini-fridges are set to remain visible.");
             }
 
         }
         //* Main function that manages the mini-fridges each save.
-        private static void MoveAllMiniFridges(bool bHide)
+        private void MoveAllMiniFridges(bool bHide)
         {
             ModEntry.DebugLog("Searching for fridge locations...");
             foreach (GameLocation location in GetFridgeLocations()){
@@ -69,7 +89,7 @@ namespace ExpandedFridge
 
         //* Get an array of all locations that have fridges.
         //WARNING: If not on Master Game it could miss locations with fridges.
-        private static GameLocation[] GetFridgeLocations(){
+        private GameLocation[] GetFridgeLocations(){
             
             //* Check Locations has changed with v1.5
             List<GameLocation> gLocations = new List<GameLocation>();
@@ -79,7 +99,7 @@ namespace ExpandedFridge
                 if((location is FarmHouse) && (location as FarmHouse).upgradeLevel > 0){
                     gLocations.Add(location);
                 }
-                //* There can be multiplayer cabins on Farm
+                //* There can be multiplayer cabins on Farm so we check the buildings
                 else if (location is Farm){
                     foreach (var building in (location as Farm).buildings){
                         //* Check cabins for enabled fridges.
@@ -90,8 +110,8 @@ namespace ExpandedFridge
                 }
                 //* Ginger Island. Another fridge location!
                 else if (location is IslandFarmHouse){
-                    IslandFarmHouse GingerFarm = location as IslandFarmHouse;
                     //* only if we have unlocked the farmhouse
+                    IslandFarmHouse GingerFarm = location as IslandFarmHouse;
                     if(GingerFarm.visited.Value){
                         gLocations.Add(location);
                     }
@@ -158,9 +178,6 @@ namespace ExpandedFridge
             return false;
         }
 
-        private bool _customMenuInitiated = false;
-        private ItemGrabMenu _menu = null;
-
         //* Updates the menu reference of the fridge.
         private void OnFridgeUpdated(ItemGrabMenu menu)
         {
@@ -216,26 +233,6 @@ namespace ExpandedFridge
             _customMenuInitiated = true;
 
         }
-
-        //* Components for inventory tabs.
-        private List<ClickableComponent> _fridgeTabs = new List<ClickableComponent>();
-        private List<Color> _fridgeTabsColors = new List<Color>();
-        private ClickableTextureComponent _rightArrowButton;
-        private ClickableTextureComponent _leftArrowButton;
-
-        private int _selectedTab = 0;
-        private int _rootTab = 0;
-        private bool _updateTabColors = false;
-
-        //* Some constant offsets for adjusting positions of components.
-        private const float textOffsetX = Game1.tileSize * 0.35F;
-        private const float textOffsetY = Game1.tileSize * 0.38F;
-        private const float textOffsetYSelected = Game1.tileSize * 0.25F;
-        private const float textOffsetXSelected = Game1.tileSize * 0.32F;
-        private const int colorOffsetX = (int)(Game1.tileSize * 0.2F);
-        private const int colorOffsetY = (int)(Game1.tileSize * 0.2F);
-        private const float colorSizeModY = 0.65F;
-        private const float colorSizeModX = 0.625F;
 
         //* Updates needed menu components.
         private void UpdateCustomComponents()
@@ -373,7 +370,6 @@ namespace ExpandedFridge
                 IClickableMenu.drawTextureBox(e.SpriteBatch, Game1.menuTexture, new Rectangle(0, 256, 60, 60), xpos, tab.bounds.Y, tab.bounds.Width, tab.bounds.Height, _selectedTab == index ? Color.White : new Color(0.3f, 0.3f, 0.3f, 1f), 1, false);
                 Color tabCol = index == 0 ? Color.BurlyWood : _fridgeTabsColors[index] == Color.Black ? Color.BurlyWood : _fridgeTabsColors[index];
                 e.SpriteBatch.Draw(Game1.staminaRect, new Rectangle(xpos + colorOffsetX, tab.bounds.Y + colorOffsetY, (int)(tab.bounds.Width * colorSizeModX), (int)(tab.bounds.Height * colorSizeModY)), tabCol);
-                //NOTE: Make compatible with 'Better Chests' here ??
                 if (index == 0)
                 {
                     const float scaleSize = 2f;
