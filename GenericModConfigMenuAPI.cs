@@ -6,10 +6,9 @@ namespace ExpandedFridge
 {
     public interface GenericModConfigMenuAPI
     {
-        void RegisterModConfig(IManifest mod, Action revertToDefault, Action saveToFile);
-        void SetDefaultIngameOptinValue( IManifest mod, bool optedIn );
-        void RegisterSimpleOption(IManifest mod, string optionName, string optionDesc, Func<bool> optionGet, Action<bool> optionSet);
-        void RegisterSimpleOption(IManifest mod, string optionName, string optionDesc, Func<SButton> optionGet, Action<SButton> optionSet);
-
+        void Register(IManifest mod, Action reset, Action save, bool titleScreenOnly = false);
+        void AddBoolOption(IManifest mod, Func<bool> getValue, Action<bool> setValue, Func<string> name, Func<string> tooltip = null, string fieldId = null);
+        void AddKeybind(IManifest mod, Func<SButton> getValue, Action<SButton> setValue, Func<string> name, Func<string> tooltip = null, string fieldId = null);
+        void OnFieldChanged(IManifest mod, Action<string, object> onChange);
     }
 }

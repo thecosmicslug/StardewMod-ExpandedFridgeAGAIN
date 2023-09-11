@@ -100,7 +100,7 @@ namespace ExpandedFridge
 
             //* Quit here if we dont have any mini-fridges
             if (miniFridgePositions.Count == 0){
-                ModEntry.DebugLog("No mini-fridges found!", LogLevel.Info);
+                ModEntry.DebugLog("No mini-fridges found!");
                 return;
             }
             
@@ -122,7 +122,7 @@ namespace ExpandedFridge
                 ModEntry.DebugLog("Moved mini-fridge from X:" + v.X + " Y:" + v.Y + " to X:" + newPosition.X +  " Y:" + newPosition.Y);
             }
 
-            ModEntry.DebugLog(location.NameOrUniqueName + " Finished!", LogLevel.Info);
+            ModEntry.DebugLog(location.NameOrUniqueName + " Finished!");
         }
 
         //* Moves all mini fridges in the location back into map bounds.
@@ -140,7 +140,7 @@ namespace ExpandedFridge
 
             //* Quit here if we dont have any mini-fridges
             if (miniFridgePositions.Count == 0){
-                ModEntry.DebugLog("No mini-fridges found!", LogLevel.Info);
+                ModEntry.DebugLog("No mini-fridges found!");
                 return;
             }
 
@@ -157,7 +157,7 @@ namespace ExpandedFridge
                 ModEntry.DebugLog("Moved mini-fridge from X:" + v.X + " Y:" + v.Y + " to X:" + newPosition.X +  " Y:" + newPosition.Y);
                 
             }
-            ModEntry.DebugLog(location.NameOrUniqueName + " Finished!", LogLevel.Info);
+            ModEntry.DebugLog(location.NameOrUniqueName + " Finished!");
         }
     }
 }

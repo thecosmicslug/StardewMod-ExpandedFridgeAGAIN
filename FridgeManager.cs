@@ -53,14 +53,9 @@ namespace ExpandedFridge
             _entry.Helper.Events.GameLoop.DayEnding += OnDayEnding;
             
             //* Show our settings for the debug log.
-            ModEntry.DebugLog("FridgeManager is now running.", LogLevel.Info);
-            if (_entry.Config.HideMiniFridges){
-                ModEntry.DebugLog("Mini-fridges are set to be hidden each day.");
-            }else{
-                ModEntry.DebugLog("Mini-fridges are set to remain visible.");
-            }
-
+            ModEntry.DebugLog(_entry.Helper.Translation.Get("Debug.FridgeManagerRunning"), LogLevel.Info);
         }
+
         //* Main function that manages the mini-fridges each save.
         private void MoveAllMiniFridges(bool bHide)
         {
@@ -88,7 +83,6 @@ namespace ExpandedFridge
         }
 
         //* Get an array of all locations that have fridges.
-        //WARNING: If not on Master Game it could miss locations with fridges.
         private GameLocation[] GetFridgeLocations(){
             
             //* Check Locations has changed with v1.5
@@ -139,9 +133,8 @@ namespace ExpandedFridge
         //* Move mini fridges out of reach if option and master game.
         private void OnDayStarted(object sender, DayStartedEventArgs e)
         {
-            if (Game1.IsMasterGame && _entry.Config.HideMiniFridges)
-            {
-                ModEntry.DebugLog("OnDayStarted(): Hiding mini-fridges from view.", LogLevel.Info);
+            if (Game1.IsMasterGame && _entry.Config.HideMiniFridges){
+                ModEntry.DebugLog("OnDayStarted(): Hiding mini-fridges from view.");
                 MoveAllMiniFridges(true);
             }
         }
@@ -149,12 +142,12 @@ namespace ExpandedFridge
         //* Move mini fridges into reach if option and master game.
         private void OnDayEnding(object sender, DayEndingEventArgs e)
         {
-            if (Game1.IsMasterGame && _entry.Config.HideMiniFridges)
-            {
-                ModEntry.DebugLog("OnDayEnding(): Move mini-fridges back for saving.", LogLevel.Info);
+            if (Game1.IsMasterGame && _entry.Config.HideMiniFridges){
+                ModEntry.DebugLog("OnDayEnding(): Move mini-fridges back for saving.");
                 MoveAllMiniFridges(false);
             }
         }
+
         //* Is given menu of a main fridge in same location.
         private bool IsMenuOfCurrentFridge(IClickableMenu menu)
         {
@@ -168,8 +161,7 @@ namespace ExpandedFridge
         //* Is given menu of any fridge inventory tabs currently registred.
         private bool IsMenuOfCurrentFridges(IClickableMenu menu)
         {
-            if (menu is ItemGrabMenu)
-            {
+            if (menu is ItemGrabMenu){
                 var grab = menu as ItemGrabMenu;
                 foreach (var f in _fridges)
                     if (grab.context == f)
@@ -188,8 +180,8 @@ namespace ExpandedFridge
         //* Releases custom menu, mutexes and unsubscribes events.
         private void OnFridgeClosed()
         {
-            if (_customMenuInitiated)
-            {
+            if (_customMenuInitiated){
+
                 _entry.Helper.Events.Display.RenderingActiveMenu -= DrawBeforeActiveMenu;
                 _entry.Helper.Events.Input.ButtonPressed -= RecieveButtonPressed;
                 _entry.Helper.Events.Input.MouseWheelScrolled -= RecieveMouseWheelScrolled;
@@ -241,8 +233,7 @@ namespace ExpandedFridge
             int i = 0;
             int labelX = _menu.xPositionOnScreen + Game1.tileSize / 2;
             int labelY = (int)(_menu.yPositionOnScreen + Game1.tileSize * 3.3F);
-            for (int ii = 0; ii < _fridges.Count; ii++)
-            {
+            for (int ii = 0; ii < _fridges.Count; ii++){
                 _fridgeTabs.Add(new ClickableComponent(new Rectangle(labelX + Game1.tileSize * i, labelY, Game1.tileSize, Game1.tileSize), (i).ToString(), (i++).ToString()));
                 _fridgeTabsColors.Add(_fridges[ii].playerChoiceColor.Value);
             }
@@ -267,8 +258,7 @@ namespace ExpandedFridge
         //* Switch leftmost fridge tab to the right.
         private void NextRootTab()
         {
-            if (_rootTab + 12 < _fridges.Count)
-            {
+            if (_rootTab + 12 < _fridges.Count){
                 _rootTab++;
                 Game1.playSound("bigSelect");
             }
@@ -277,8 +267,7 @@ namespace ExpandedFridge
         //* Switch leftmost fridge tab to the left.
         private void LastRootTab()
         {
-            if (_rootTab > 0)
-            {
+            if (_rootTab > 0){
                 _rootTab--;
                 Game1.playSound("bigSelect");
             }
@@ -349,8 +338,7 @@ namespace ExpandedFridge
             e.SpriteBatch.Draw(Game1.fadeToBlackRect, new Rectangle(0, 0, Game1.uiViewport.Width, Game1.uiViewport.Height), Color.Black * 0.5f);
 
             //* if flagged, update tabs colors
-            if (_updateTabColors)
-            {
+            if (_updateTabColors){
                 _updateTabColors = false;
                 _fridgeTabsColors.Clear();
                 foreach (var c in _fridges)
@@ -359,8 +347,8 @@ namespace ExpandedFridge
 
             //* draw tabs
             int i = 1;
-            for (int index = _rootTab; index < _fridgeTabs.Count && i++ <= 12; index++)
-            {
+            for (int index = _rootTab; index < _fridgeTabs.Count && i++ <= 12; index++){
+
                 ClickableComponent tab = _fridgeTabs[index];
 
                 int width = Game1.tileSize / 2;
@@ -370,15 +358,13 @@ namespace ExpandedFridge
                 IClickableMenu.drawTextureBox(e.SpriteBatch, Game1.menuTexture, new Rectangle(0, 256, 60, 60), xpos, tab.bounds.Y, tab.bounds.Width, tab.bounds.Height, _selectedTab == index ? Color.White : new Color(0.3f, 0.3f, 0.3f, 1f), 1, false);
                 Color tabCol = index == 0 ? Color.BurlyWood : _fridgeTabsColors[index] == Color.Black ? Color.BurlyWood : _fridgeTabsColors[index];
                 e.SpriteBatch.Draw(Game1.staminaRect, new Rectangle(xpos + colorOffsetX, tab.bounds.Y + colorOffsetY, (int)(tab.bounds.Width * colorSizeModX), (int)(tab.bounds.Height * colorSizeModY)), tabCol);
-                if (index == 0)
-                {
+                if (index == 0){
                     const float scaleSize = 2f;
                     Rectangle rectForBigCraftable = Object.getSourceRectForBigCraftable(modUtilities.MiniFridgeSheetIndex);
                     rectForBigCraftable.Height -= 16;
                     e.SpriteBatch.Draw(Game1.bigCraftableSpriteSheet, new Vector2(xpos + 32f, tab.bounds.Y + 32f + 21f), new Microsoft.Xna.Framework.Rectangle?(rectForBigCraftable), Color.White, 0.0f, new Vector2(8f, 16f), scaleSize, SpriteEffects.None, 1);
-                }
-                else
-                {
+                
+                }else{
                     int digit = int.Parse(tab.label);
                     if (digit < 10)
                         Utility.drawTinyDigits(digit, e.SpriteBatch, new Vector2(xpos + textOffsetX, tab.bounds.Y + textOffsetY), 4f, 1f, Color.White);
@@ -391,8 +377,7 @@ namespace ExpandedFridge
             }
 
             //* draw arrows if too many fridges
-            if (_fridges.Count > 12)
-            {
+            if (_fridges.Count > 12){
                 if (_rootTab > 0)
                     _leftArrowButton.draw(e.SpriteBatch);
                 if (_rootTab + 12 < _fridges.Count)
@@ -403,13 +388,12 @@ namespace ExpandedFridge
         //* Recieves input and responds to custom menu button presses and hotkeys.
         private void RecieveButtonPressed(object sender, ButtonPressedEventArgs e)
         {
-            if (e.Button == SButton.MouseLeft)
-            {
+            if (e.Button == SButton.MouseLeft){
+
                 Point mouse = new Point(Game1.getMouseX(true), Game1.getMouseY(true));
 
                 int i = 1;
-                for (int index = _rootTab; index < _fridgeTabs.Count && i++ <= 12; index++)
-                {
+                for (int index = _rootTab; index < _fridgeTabs.Count && i++ <= 12; index++){
                     ClickableComponent tab = _fridgeTabs[index];
 
                     int width = Game1.tileSize / 2;
@@ -430,18 +414,15 @@ namespace ExpandedFridge
                 else if (_rightArrowButton.containsPoint(mouse.X, mouse.Y))
                     NextRootTab();
 
-                if (_menu.chestColorPicker != null && _menu.chestColorPicker.isWithinBounds(mouse.X, mouse.Y))
-                {
+                if (_menu.chestColorPicker != null && _menu.chestColorPicker.isWithinBounds(mouse.X, mouse.Y)){
                     _updateTabColors = true;
                 }
             }
-            else if (e.Button == _entry.Config.NextFridgeTabButton)
-            {
+            else if (e.Button == _entry.Config.NextFridgeTabButton){
                 SetSelectedTab(_selectedTab + 1);
                 ClampRootTab();
             }
-            else if (e.Button == _entry.Config.LastFridgeTabButton)
-            {
+            else if (e.Button == _entry.Config.LastFridgeTabButton){
                 SetSelectedTab(_selectedTab - 1);
                 ClampRootTab();
             }
@@ -450,13 +431,10 @@ namespace ExpandedFridge
         //* Mouse wheel scrolling of tabs.
         private void RecieveMouseWheelScrolled(object sender, MouseWheelScrolledEventArgs e)
         {
-            if (e.Delta > 0)
-            {
+            if (e.Delta > 0){
                 SetSelectedTab(_selectedTab + 1);
                 ClampRootTab();
-            }
-            else
-            {
+            }else{
                 SetSelectedTab(_selectedTab - 1);
                 ClampRootTab();
             }

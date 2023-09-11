@@ -21,11 +21,10 @@ namespace ExpandedFridge
             //* Load Config
             _instance = this;
             Config = Helper.ReadConfig<ModConfig>();
-            DebugLog("Configuration loaded from 'config.json'");
+            DebugLog(Helper.Translation.Get("Debug.ConfigurationLoaded"), LogLevel.Info);
 
             //* Prepare Event Hooks
             Helper.Events.GameLoop.GameLaunched += onLaunched;
-            Helper.Events.GameLoop.SaveLoaded +=   onSaveLoaded;
         }
 
          //* Setup for GenericModConfigMenu support.
@@ -34,34 +33,73 @@ namespace ExpandedFridge
             //* Hook into GMCM
             var api = Helper.ModRegistry.GetApi<GenericModConfigMenuAPI>("spacechase0.GenericModConfigMenu");
             if (api != null){
+                
+                //* Register with GMCM
+                api.Register(ModManifest, () => Config = new ModConfig(), () => Helper.WriteConfig(Config));
 
-                api.RegisterModConfig(ModManifest, () => Config = new ModConfig(), () => Helper.WriteConfig(Config));
+                //* Our Key-binds
+                api.AddKeybind(ModManifest, () => Config.NextFridgeTabButton, (SButton val) => Config.NextFridgeTabButton = val, () => Helper.Translation.Get("Config.NextFridgeTabButton"), () => Helper.Translation.Get("Config.NextFridgeTabButtonDesc"));
+                api.AddKeybind(ModManifest, () => Config.LastFridgeTabButton, (SButton val) => Config.LastFridgeTabButton = val, () => Helper.Translation.Get("Config.LastFridgeTabButton"), () => Helper.Translation.Get("Config.LastFridgeTabButtonDesc"));
 
                 //* Our Options
-                api.SetDefaultIngameOptinValue(ModManifest, true);
-                api.RegisterSimpleOption(ModManifest, Helper.Translation.Get("Config.ShowDebugMessages"), Helper.Translation.Get("Config.ShowDebugMessagesDesc"), () => Config.ShowDebugMessages, (bool val) => Config.ShowDebugMessages = val);
-                api.RegisterSimpleOption(ModManifest, Helper.Translation.Get("Config.HideMiniFridges"), Helper.Translation.Get("Config.HideMiniFridgesDesc"), () => Config.HideMiniFridges, (bool val) => Config.HideMiniFridges = val);
-                api.RegisterSimpleOption(ModManifest, Helper.Translation.Get("Config.NextFridgeTabButton"), Helper.Translation.Get("Config.NextFridgeTabButtonDesc"), () => Config.NextFridgeTabButton, (SButton val) => Config.NextFridgeTabButton = val);
-                api.RegisterSimpleOption(ModManifest, Helper.Translation.Get("Config.LastFridgeTabButton"), Helper.Translation.Get("Config.LastFridgeTabButtonDesc"), () => Config.LastFridgeTabButton, (SButton val) => Config.LastFridgeTabButton = val);
-                DebugLog("GenericModConfigMenu setup completed.");
+                api.AddBoolOption(ModManifest,() => Config.ShowDebugMessages, (bool val) => Config.ShowDebugMessages = val, ()=> Helper.Translation.Get("Config.ShowDebugMessages"), () => Helper.Translation.Get("Config.ShowDebugMessagesDesc"),"ShowDebugMessages");
+                api.AddBoolOption(ModManifest,() => Config.HideMiniFridges, (bool val) => Config.HideMiniFridges = val, ()  => Helper.Translation.Get("Config.HideMiniFridges"), () => Helper.Translation.Get("Config.HideMiniFridgesDesc"),"HideMiniFridges");
+
+                //* Detect changes mid-game.
+                api.OnFieldChanged(ModManifest,onFieldChanged);
+
+                DebugLog(Helper.Translation.Get("Debug.GenericModConfigMenuFound"), LogLevel.Info);
 
             }else{ //* Could not find GenericModConfigMenu ??
-                DebugLog("GenericModConfigMenu not found. Configuration can be edited from 'config.json'");
+                DebugLog(Helper.Translation.Get("Debug.GenericModConfigMenuMissing"), LogLevel.Info);
             }
-        }
 
-        //* The method invoked when the player loads a save. Start our FridgeManager class.
-        private void onSaveLoaded(object sender, EventArgs e)
-        {
+            //* Print options to the log
+            if (Config.ShowDebugMessages){
+                DebugLog(Helper.Translation.Get("Debug.DebugEnabled"), LogLevel.Info);
+            }else{
+                DebugLog(Helper.Translation.Get("Debug.DebugDisabled"), LogLevel.Info);
+            }
+
+            if (Config.HideMiniFridges){
+                DebugLog(Helper.Translation.Get("Debug.HideMiniFridgeEnabled"), LogLevel.Info);
+            }else{
+                DebugLog(Helper.Translation.Get("Debug.HideMiniFridgeDisabled"), LogLevel.Info);
+            }
+
             //* Start FridgeManager before the start of the first day.
             FridgeManager = new FridgeManager(_instance);
+
+        }
+
+        //* The method invoked when we detect configuration changes.
+        private void onFieldChanged(string str, object obj)
+        {
+            if (str == "ShowDebugMessages"){
+                if((bool)obj){
+                    DebugLog(Helper.Translation.Get("Debug.OptionEnabledRuntime", new { option = str }), LogLevel.Info);
+                }else{
+                    DebugLog(Helper.Translation.Get("Debug.OptionDisabledRuntime", new { option = str }), LogLevel.Info);
+                }
+            }
+            else if(str == "HideMiniFridges"){
+                if((bool)obj){
+                    DebugLog(Helper.Translation.Get("Debug.OptionEnabledRuntime", new { option = str }), LogLevel.Info);
+                }else{
+                    DebugLog(Helper.Translation.Get("Debug.OptionDisabledRuntime", new { option = str }), LogLevel.Info);
+                }
+            }
         }
 
         //* Prints message in console log with given log level if enabled.
         public static void DebugLog(string message, LogLevel level = LogLevel.Debug)
         {
+            if(level != LogLevel.Debug){
+                _instance.Monitor.Log(message, level);
+            }else{
             if (_instance.Config.ShowDebugMessages){
                 _instance.Monitor.Log(message, level);
+            }
             }
         }
     }
