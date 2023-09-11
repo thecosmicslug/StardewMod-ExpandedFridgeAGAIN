@@ -1,9 +1,11 @@
 # ExpandedFridge  + bugfixes
 This project was forked from [https://github.com/Uwazouri/ExpandedFridge]
-It now fully supports multiplayer & ginger island content,
-I've added GenericModConfigMenu support,
-and it also contains UI Scale fix from 'SampaioTS' 
 
+It now fully supports multiplayer & ginger island content,
+
+I've added GenericModConfigMenu support, 
+
+and it also contains UI Scale fix from 'SampaioTS' 
 
 I work in visual studio code on linux, to build on other platforms may well need adjustments.
 
