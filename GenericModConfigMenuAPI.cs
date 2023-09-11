@@ -2,7 +2,7 @@ using System;
 using StardewModdingAPI;
 using StardewModdingAPI.Utilities;
 
-namespace ExpandedFridge
+namespace ExpandedFridgeAGAIN
 {
     public interface GenericModConfigMenuAPI
     {

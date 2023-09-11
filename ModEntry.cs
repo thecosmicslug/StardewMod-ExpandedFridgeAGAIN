@@ -4,7 +4,7 @@ using StardewModdingAPI.Events;
 using System;
 using System.Collections.Generic;
 
-namespace ExpandedFridge
+namespace ExpandedFridgeAGAIN
 {
     //* The entry point of the mod handled by SMAPI.
     public class ModEntry : Mod

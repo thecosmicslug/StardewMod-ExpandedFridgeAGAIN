@@ -1,6 +1,6 @@
 ﻿using StardewModdingAPI;
 
-namespace ExpandedFridge
+namespace ExpandedFridgeAGAIN
 {
     //* Stores options for the FridgeManager.
     public class ModConfig

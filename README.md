@@ -33,20 +33,20 @@ Use inventory tabs, mouse scroll wheel or game-pad shoulder triggers to switch b
 
 (Optional) All mini fridges are moved in and out of the map bounds when day has started/before ending (on by default).
 
-(Optional) Edit the "config.json" file in the "ExpandedFridge" folder to set hotkeys or hide mini fridges option.
+(Optional) Edit the "config.json" file in the "ExpandedFridgeAGAIN" folder to set hotkeys or hide mini fridges option.
 
 (for keybindings and regarding the config file, see https://stardewvalleywiki.com/Modding:Player_Guide/Key_Bindings)
 
 
 ## Install Instructions:
 - Download and extract the "Expanded Fridge Files" zip file into a new folder.
-- Copy the "ExpandedFridge" folder from the new folder into your Stardew Valley mods folder.
+- Copy the "ExpandedFridgeAGAIN" folder from the new folder into your Stardew Valley mods folder.
 - Done!
 
 
 ## Uninstall Instructions:
 - Go to your Stardew Valley mods folder.
-- Delete the "ExpandedFridge" folder.
+- Delete the "ExpandedFridgeAGAIN" folder.
 - Done!
 
 

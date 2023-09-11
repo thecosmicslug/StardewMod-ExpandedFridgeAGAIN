@@ -9,7 +9,7 @@ using System.Collections.Specialized;
 using System.Runtime.InteropServices;
 using StardewModdingAPI;
 
-namespace ExpandedFridge
+namespace ExpandedFridgeAGAIN
 {
     //* Collections of static methods and variables.
     class modUtilities

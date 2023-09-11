@@ -12,7 +12,7 @@ using System.Collections.Generic;
 
 //TODO: Add Github update key before uploading to nexus.
 
-namespace ExpandedFridge
+namespace ExpandedFridgeAGAIN
 {
     //* Handles the tracking and implementation of managing mini fridges in each farmhouse so they can be hidden and accessed from the main fridge.
     public class FridgeManager
