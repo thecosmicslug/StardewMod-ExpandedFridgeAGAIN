@@ -1,7 +1,7 @@
 {
-    "Config.ShowDebugMessages": "Enable Debug Logging.",
+    "Config.ShowDebugMessages": "Enable Debug Logging",
     "Config.ShowDebugMessagesDesc": "Output debug logs to SMAPI Console to help bugfinding.",
-    "Config.HideMiniFridges": "Hide mini-fridges.",
+    "Config.HideMiniFridges": "Hide Mini-Fridges",
     "Config.HideMiniFridgesDesc": "Hide mini-fridges outside of the map each morning.",
     "Config.NextFridgeTabButton": "Next Fridge Key.",
     "Config.NextFridgeTabButtonDesc": "Button to navigate to next tab.",
@@ -10,14 +10,12 @@
 
     "Debug.FridgeManagerRunning": "FridgeManager is now running.",
     "Debug.ConfigurationLoaded": "Configuration loaded from 'config.json'",
-    "Debug.GenericModConfigMenuFound": "GenericModConfigMenu setup completed.",
+    "Debug.GenericModConfigMenuFound": "GenericModConfigMenu setup completed successfully!",
     "Debug.GenericModConfigMenuMissing": "GenericModConfigMenu not found! Configuration can be edited from 'config.json'",
-    "Debug.DebugEnabled": "Debug messages will be displayed in SMAPI console.",
-    "Debug.DebugDisabled": "Extra Debug messages have been disabled.",
-    "Debug.HideMiniFridgeEnabled": "Mini-fridges are set to be hidden each day.",
-    "Debug.HideMiniFridgeDisabled": "Mini-fridges are set to remain visible.",
     "Debug.OptionEnabledRuntime": "'{{option}}' has been enabled.",
-    "Debug.OptionDisabledRuntime": "'{{option}}' has been disabled."
+    "Debug.OptionDisabledRuntime": "'{{option}}' has been disabled.",
+    "Debug.KeySetTo": "'{{option}}' has been set to use key: ",
+    "Debug.BetterChestsDetected": "WARNING: 'BetterChests' detected! This mod is incompatible with 'BetterChests'."
 
 }
 
