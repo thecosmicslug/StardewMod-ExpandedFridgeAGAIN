@@ -15,7 +15,8 @@
     "Debug.OptionEnabledRuntime": "'{{option}}' has been enabled.",
     "Debug.OptionDisabledRuntime": "'{{option}}' has been disabled.",
     "Debug.KeySetTo": "'{{option}}' has been set to use key: ",
-    "Debug.BetterChestsDetected": "WARNING: 'BetterChests' detected! This mod is incompatible with 'BetterChests'."
+    "Debug.BetterChestsDetected": "WARNING: 'BetterChests' detected! This mod is incompatible with 'BetterChests'.",
+    "Debug.ExpandedFridgeDetected": "WARNING: 'ExpandedFridge' detected! This mod is a rewrite/fork and is incompatible with 'ExpandedFridge'."
 
 }
 

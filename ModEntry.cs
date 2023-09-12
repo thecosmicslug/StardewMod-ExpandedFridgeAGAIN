@@ -40,7 +40,7 @@ namespace ExpandedFridgeAGAIN
                 api.AddKeybind(ModManifest, () => Config.LastFridgeTabButton, (SButton val) => Config.LastFridgeTabButton = val, () => Helper.Translation.Get("Config.LastFridgeTabButton"), () => Helper.Translation.Get("Config.LastFridgeTabButtonDesc"),"LastFridgeTabButton");
 
                 //* Our Options
-                api.AddBoolOption(ModManifest,() => Config.ShowDebugMessages, (bool val) => Config.ShowDebugMessages = val, ()=> Helper.Translation.Get("Config.ShowDebugMessages" + "."), () => Helper.Translation.Get("Config.ShowDebugMessagesDesc"),"ShowDebugMessages");
+                api.AddBoolOption(ModManifest,() => Config.ShowDebugMessages, (bool val) => Config.ShowDebugMessages = val, ()=> Helper.Translation.Get("Config.ShowDebugMessages") + ".", () => Helper.Translation.Get("Config.ShowDebugMessagesDesc"),"ShowDebugMessages");
                 api.AddBoolOption(ModManifest,() => Config.HideMiniFridges, (bool val) => Config.HideMiniFridges = val, ()  => Helper.Translation.Get("Config.HideMiniFridges") + ".", () => Helper.Translation.Get("Config.HideMiniFridgesDesc"),"HideMiniFridges");
 
                 //* Detect changes mid-game.
@@ -57,6 +57,11 @@ namespace ExpandedFridgeAGAIN
             bool BetterChestsLoaded = Helper.ModRegistry.IsLoaded("furyx639.BetterChests");
             if (BetterChestsLoaded){
                 DebugLog(Helper.Translation.Get("Debug.BetterChestsDetected"), LogLevel.Warn);
+            }    
+
+            bool ExpandedFridgeLoaded = Helper.ModRegistry.IsLoaded("Uwazouri.ExpandedFridge");
+            if (ExpandedFridgeLoaded){
+                DebugLog(Helper.Translation.Get("Debug.ExpandedFridgeDetected"), LogLevel.Warn);
             }    
 
             //* Print options to the log

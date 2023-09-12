@@ -3,6 +3,7 @@ using StardewValley.Menus;
 using StardewValley.Objects;
 using StardewValley.Network;
 using StardewValley.Locations;
+
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 
@@ -10,7 +11,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
-//TODO: Add Github update key before uploading to nexus.
 
 namespace ExpandedFridgeAGAIN
 {
