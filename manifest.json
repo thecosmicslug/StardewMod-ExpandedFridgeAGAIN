@@ -6,5 +6,5 @@
   "UniqueID": "TheCosmicSlug.ExpandedFridgeAGAIN",
   "EntryDll": "ExpandedFridgeAGAIN.dll",
   "UpdateKeys": [ "GitHub:thecosmicslug/StardewMod-ExpandedFridgeAGAIN" ],
-  "MinimumApiVersion": "3.3.0"
+  "MinimumApiVersion": "3.18.4"
 }
