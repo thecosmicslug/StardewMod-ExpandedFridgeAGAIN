@@ -4,7 +4,7 @@
     <AssemblyName>ExpandedFridgeAGAIN</AssemblyName>
     <RootNamespace>ExpandedFridgeAGAIN</RootNamespace>
     <Version>3.1.0</Version>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <OutputPath>.\bin\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
