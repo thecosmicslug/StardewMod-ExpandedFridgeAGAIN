@@ -33,8 +33,7 @@ namespace ExpandedFridgeAGAIN
             for (int h = 0; h <= location.map.Layers[0].LayerHeight; h++)
                 for (int w = 0; w <= location.map.Layers[0].LayerWidth; w++)
                     //* check if tile in width and height is placeable and not on wall
-                    if (location.CanItemBePlacedHere(new Vector2(w, h),false))
-                    //if (location.isTileLocationTotallyClearAndPlaceable(w, h) && (!(location is DecoratableLocation) || !(location as DecoratableLocation).isTileOnWall(w, h)))
+                    if (!location.IsTileBlockedBy(new Vector2(w, h)) && (!(location is DecoratableLocation) || !(location as DecoratableLocation).isTileOnWall(w, h)))
                         return new Vector2(w, h);
 
             int y = 0;
@@ -101,6 +100,7 @@ namespace ExpandedFridgeAGAIN
 
             //* Quit here if we dont have any mini-fridges
             if (miniFridgePositions.Count == 0){
+                ModEntry.DebugLog("No mini-fridges found!");
                 return;
             }
             
@@ -140,6 +140,7 @@ namespace ExpandedFridgeAGAIN
 
             //* Quit here if we dont have any mini-fridges
             if (miniFridgePositions.Count == 0){
+                ModEntry.DebugLog("No mini-fridges found!");
                 return;
             }
 

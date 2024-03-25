@@ -87,10 +87,8 @@ namespace ExpandedFridgeAGAIN
             
             //* Check Locations has changed with v1.5
             List<GameLocation> gLocations = new List<GameLocation>();
-            
-            //TODO: Not all code paths return a value in anonymous method of type 'Func<GameLocation, bool>'
-		    Utility.ForEachLocation(delegate(GameLocation location){
 
+            Utility.ForEachLocation((GameLocation location) =>{
                 //* FarmHouse has a fridge, but check it is enabled.
                 if((location is FarmHouse) && (location as FarmHouse).upgradeLevel > 0){
                     gLocations.Add(location);
@@ -112,14 +110,10 @@ namespace ExpandedFridgeAGAIN
                         gLocations.Add(location);
                     }
                 }
-                //Test the return.
                 return true;
             });
-
             return gLocations.ToArray();
-
         }
-
 
         //* Detects fridge menu status and invokes OnFridge methods.
         private void OnMenuChanged(object sender, MenuChangedEventArgs e)
