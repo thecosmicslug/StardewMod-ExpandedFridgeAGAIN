@@ -88,7 +88,7 @@ namespace ExpandedFridgeAGAIN
             //* Check Locations has changed with v1.5
             List<GameLocation> gLocations = new List<GameLocation>();
 
-            Utility.ForAllLocations((GameLocation location) =>{
+            Utility.ForEachLocation((GameLocation location) =>{
                 //* FarmHouse has a fridge, but check it is enabled.
                 if((location is FarmHouse) && (location as FarmHouse).upgradeLevel > 0){
                     gLocations.Add(location);
@@ -110,6 +110,7 @@ namespace ExpandedFridgeAGAIN
                         gLocations.Add(location);
                     }
                 }
+                return true;
             });
             return gLocations.ToArray();
         }
