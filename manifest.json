@@ -1,7 +1,7 @@
 {
   "Name": "ExpandedFridgeAGAIN",
   "Author": "TheCosmicSlug",
-  "Version": "3.1.1",
+  "Version": "3.2.0",
   "Description": "Hide mini fridges and access them from the house fridge.",
   "UniqueID": "TheCosmicSlug.ExpandedFridgeAGAIN",
   "EntryDll": "ExpandedFridgeAGAIN.dll",

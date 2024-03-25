@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using StardewValley;
 using StardewValley.Objects;
@@ -33,7 +33,8 @@ namespace ExpandedFridgeAGAIN
             for (int h = 0; h <= location.map.Layers[0].LayerHeight; h++)
                 for (int w = 0; w <= location.map.Layers[0].LayerWidth; w++)
                     //* check if tile in width and height is placeable and not on wall
-                    if (location.isTileLocationTotallyClearAndPlaceable(w, h) && (!(location is DecoratableLocation) || !(location as DecoratableLocation).isTileOnWall(w, h)))
+                    if (location.CanItemBePlacedHere(new Vector2(w, h),false))
+                    //if (location.isTileLocationTotallyClearAndPlaceable(w, h) && (!(location is DecoratableLocation) || !(location as DecoratableLocation).isTileOnWall(w, h)))
                         return new Vector2(w, h);
 
             int y = 0;
@@ -52,7 +53,7 @@ namespace ExpandedFridgeAGAIN
         //* Creates a new inventory menu from a chest with option for showing the color picker.
         public static ItemGrabMenu GetNewItemGrabMenuFromChest(Chest chest, bool showColorPicker)
         {
-            var igm = new ItemGrabMenu((IList<Item>)chest.items, false, true, new
+            var igm = new ItemGrabMenu((IList<Item>)chest.Items, false, true, new
                     InventoryMenu.highlightThisItem(InventoryMenu.highlightAllItems),
                     new ItemGrabMenu.behaviorOnItemSelect(chest.grabItemFromInventory), (string)null,
                     new ItemGrabMenu.behaviorOnItemSelect(chest.grabItemFromChest), false, true, true, true, true, 1,
@@ -100,7 +101,6 @@ namespace ExpandedFridgeAGAIN
 
             //* Quit here if we dont have any mini-fridges
             if (miniFridgePositions.Count == 0){
-                ModEntry.DebugLog("No mini-fridges found!");
                 return;
             }
             
@@ -140,7 +140,6 @@ namespace ExpandedFridgeAGAIN
 
             //* Quit here if we dont have any mini-fridges
             if (miniFridgePositions.Count == 0){
-                ModEntry.DebugLog("No mini-fridges found!");
                 return;
             }
 
