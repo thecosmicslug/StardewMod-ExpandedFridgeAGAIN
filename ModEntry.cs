@@ -21,10 +21,10 @@ namespace ExpandedFridgeAGAIN
             _instance = this;
 
             //* Show debug info etc.
-            var buildTime = modUtilities.GetBuildDate(Assembly.GetExecutingAssembly());
-            buildTime = buildTime.ToLocalTime();
+            //var buildTime = modUtilities.GetBuildDate(Assembly.GetExecutingAssembly());
+            //buildTime = buildTime.ToLocalTime();
             DebugLog("ExpandedFridgeAGAIN v" + GetType().Assembly.GetName().Version.ToString(3) +" (" + Constants.TargetPlatform + ") loaded.", LogLevel.Info);
-            DebugLog("Binary Compiled: " + buildTime.ToString("d/M/yyyy h:mm tt"));
+            //DebugLog("Binary Compiled: " + buildTime.ToString("d/M/yyyy h:mm tt"));
 
             //* Load Config
             Config = Helper.ReadConfig<ModConfig>();
