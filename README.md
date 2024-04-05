@@ -22,8 +22,8 @@ It should also work in multiplayer.
 
 
 ## Requirements:
-- SMAPI 3.18+
-- Stardew Valley 1.5+
+- SMAPI 4.0+
+- Stardew Valley 1.6+
 
 
 ## In-Game Instructions:
@@ -53,6 +53,7 @@ Use inventory tabs, mouse scroll wheel or game-pad shoulder triggers to switch b
 
 
 ## Change log:
+- 3.2.0 ﻿- Recompiled & fixed for SDV 1.6
 - 3.1.0 ﻿- Forked & Applied UI Scale bugfix.
 - 3.0.0 ﻿- Mini Fridge Update (rework of entire mod).
 - 2.0.3 ﻿- Changed from day to save events in fridge manipulation. Hopefully solves problems with Save Anywhere.

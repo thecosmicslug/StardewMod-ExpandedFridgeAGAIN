@@ -1,17 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
+    <Name>ExpandedFridgeAGAIN</Name>
+    <Version>3.2.0</Version>
+    <Authors>TheCosmicSlug</Authors>
+    <Description>Hide mini fridges and access them all from the house fridge.</Description>
+    <UpdateKeys>GitHub:thecosmicslug/StardewMod-ExpandedFridgeAGAIN</UpdateKeys>
+    <UniqueId>TheCosmicSlug.ExpandedFridgeAGAIN</UniqueId>
     <AssemblyName>ExpandedFridgeAGAIN</AssemblyName>
     <RootNamespace>ExpandedFridgeAGAIN</RootNamespace>
-    <Version>3.1.0</Version>
     <TargetFramework>net6.0</TargetFramework>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <OutputPath>.\bin\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-    <CheckEolTargetFramework>false</CheckEolTargetFramework>
+    <BaseManifest>new</BaseManifest>
+    <MinimumApiVersion>auto</MinimumApiVersion>
+    <SourceRevisionId>build$([System.DateTime]::UtcNow.ToString("yyyyMMddHHmmss"))</SourceRevisionId>
+    <Deterministic>false</Deterministic>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Pathoschild.Stardew.ModBuildConfig" Version="4.1.1" />
+    <PackageReference Include="Leclair.Stardew.ModManifestBuilder" Version="2.1.0" />
   </ItemGroup>
 </Project>

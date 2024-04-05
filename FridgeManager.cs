@@ -53,7 +53,7 @@ namespace ExpandedFridgeAGAIN
             _entry.Helper.Events.GameLoop.DayEnding += OnDayEnding;
             
             //* Show our settings for the debug log.
-            ModEntry.DebugLog(_entry.Helper.Translation.Get("Debug.FridgeManagerRunning"), LogLevel.Info);
+            ModEntry.DebugLog(_entry.Helper.Translation.Get("Debug.FridgeManagerRunning"));
         }
 
         //* Main function that manages the mini-fridges each save.
