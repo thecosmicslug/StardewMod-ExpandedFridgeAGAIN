@@ -1,4 +1,4 @@
-﻿using StardewValley;
+using StardewValley;
 using StardewValley.Menus;
 using StardewValley.Objects;
 using StardewValley.Network;
@@ -53,7 +53,7 @@ namespace ExpandedFridgeAGAIN
             _entry.Helper.Events.GameLoop.DayEnding += OnDayEnding;
             
             //* Show our settings for the debug log.
-            ModEntry.DebugLog(_entry.Helper.Translation.Get("Debug.FridgeManagerRunning"), LogLevel.Info);
+            ModEntry.DebugLog(_entry.Helper.Translation.Get("Debug.FridgeManagerRunning"));
         }
 
         //* Main function that manages the mini-fridges each save.
@@ -88,7 +88,7 @@ namespace ExpandedFridgeAGAIN
             //* Check Locations has changed with v1.5
             List<GameLocation> gLocations = new List<GameLocation>();
 
-            Utility.ForAllLocations((GameLocation location) =>{
+            Utility.ForEachLocation((GameLocation location) =>{
                 //* FarmHouse has a fridge, but check it is enabled.
                 if((location is FarmHouse) && (location as FarmHouse).upgradeLevel > 0){
                     gLocations.Add(location);
@@ -110,6 +110,7 @@ namespace ExpandedFridgeAGAIN
                         gLocations.Add(location);
                     }
                 }
+                return true;
             });
             return gLocations.ToArray();
         }

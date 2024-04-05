@@ -1,4 +1,6 @@
-﻿using System;
+using System;
+using System.Reflection;
+using System.Globalization;
 using System.Collections.Generic;
 using StardewValley;
 using StardewValley.Objects;
@@ -33,7 +35,7 @@ namespace ExpandedFridgeAGAIN
             for (int h = 0; h <= location.map.Layers[0].LayerHeight; h++)
                 for (int w = 0; w <= location.map.Layers[0].LayerWidth; w++)
                     //* check if tile in width and height is placeable and not on wall
-                    if (location.isTileLocationTotallyClearAndPlaceable(w, h) && (!(location is DecoratableLocation) || !(location as DecoratableLocation).isTileOnWall(w, h)))
+                    if (!location.IsTileBlockedBy(new Vector2(w, h)) && (!(location is DecoratableLocation) || !(location as DecoratableLocation).isTileOnWall(w, h)))
                         return new Vector2(w, h);
 
             int y = 0;
@@ -52,7 +54,7 @@ namespace ExpandedFridgeAGAIN
         //* Creates a new inventory menu from a chest with option for showing the color picker.
         public static ItemGrabMenu GetNewItemGrabMenuFromChest(Chest chest, bool showColorPicker)
         {
-            var igm = new ItemGrabMenu((IList<Item>)chest.items, false, true, new
+            var igm = new ItemGrabMenu((IList<Item>)chest.Items, false, true, new
                     InventoryMenu.highlightThisItem(InventoryMenu.highlightAllItems),
                     new ItemGrabMenu.behaviorOnItemSelect(chest.grabItemFromInventory), (string)null,
                     new ItemGrabMenu.behaviorOnItemSelect(chest.grabItemFromChest), false, true, true, true, true, 1,
@@ -159,5 +161,23 @@ namespace ExpandedFridgeAGAIN
             }
             ModEntry.DebugLog(location.NameOrUniqueName + " Finished!");
         }
+
+        public static DateTime GetBuildDate(Assembly assembly){
+
+            const string BuildVersionMetadataPrefix = "+build";
+            var attribute = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
+            if (attribute?.InformationalVersion != null){
+                var value = attribute.InformationalVersion;
+                var index = value.IndexOf(BuildVersionMetadataPrefix);
+                if (index > 0){
+                    value = value.Substring(index + BuildVersionMetadataPrefix.Length);
+                    if (DateTime.TryParseExact(value, "yyyyMMddHHmmss", CultureInfo.InvariantCulture, DateTimeStyles.None, out var result)){
+                        return result;
+                    }
+                }
+            }
+            return default;
+        }
+
     }
 }

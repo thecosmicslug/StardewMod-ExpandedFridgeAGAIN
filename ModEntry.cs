@@ -1,7 +1,8 @@
-﻿using StardewModdingAPI;
+using StardewModdingAPI;
 using StardewModdingAPI.Events;
 
 using System;
+using System.Reflection;
 using System.Collections.Generic;
 
 namespace ExpandedFridgeAGAIN
@@ -16,10 +17,18 @@ namespace ExpandedFridgeAGAIN
         //* Setup instance and load our first event-hooks
         public override void Entry(IModHelper helper)
         {
-            //* Load Config
+            //* Setup DebugLog
             _instance = this;
+
+            //* Show debug info etc.
+            var buildTime = modUtilities.GetBuildDate(Assembly.GetExecutingAssembly());
+            buildTime = buildTime.ToLocalTime();
+            DebugLog("ExpandedFridgeAGAIN v" + GetType().Assembly.GetName().Version.ToString(3) +" (" + Constants.TargetPlatform + ") loaded.", LogLevel.Info);
+            DebugLog("Binary Compiled: " + buildTime.ToString("d/M/yyyy h:mm tt"));
+
+            //* Load Config
             Config = Helper.ReadConfig<ModConfig>();
-            DebugLog(Helper.Translation.Get("Debug.ConfigurationLoaded"), LogLevel.Info);
+            DebugLog(Helper.Translation.Get("Debug.ConfigurationLoaded"));
 
             //* Prepare Event Hooks
             Helper.Events.GameLoop.GameLaunched += onLaunched;
@@ -46,10 +55,10 @@ namespace ExpandedFridgeAGAIN
                 //* Detect changes mid-game.
                 api.OnFieldChanged(ModManifest,onFieldChanged);
 
-                DebugLog(Helper.Translation.Get("Debug.GenericModConfigMenuFound"), LogLevel.Info);
+                DebugLog(Helper.Translation.Get("Debug.GenericModConfigMenuFound"));
 
             }else{ //* Could not find GenericModConfigMenu ??
-                DebugLog(Helper.Translation.Get("Debug.GenericModConfigMenuMissing"), LogLevel.Info);
+                DebugLog(Helper.Translation.Get("Debug.GenericModConfigMenuMissing"));
             }
 
             //* Check for incompatible mods.
@@ -67,18 +76,17 @@ namespace ExpandedFridgeAGAIN
             //* Print options to the log
             if (Config.ShowDebugMessages){
                 DebugLog(Helper.Translation.Get("Debug.OptionEnabledRuntime", new { option = Helper.Translation.Get("Config.ShowDebugMessages") }), LogLevel.Info);
-            }else{
-                DebugLog(Helper.Translation.Get("Debug.OptionDisabledRuntime", new { option = Helper.Translation.Get("Config.ShowDebugMessages") }), LogLevel.Info);
-            }
-            if (Config.HideMiniFridges){
-                DebugLog(Helper.Translation.Get("Debug.OptionEnabledRuntime", new { option = Helper.Translation.Get("Config.HideMiniFridges") }), LogLevel.Info);
-            }else{
-                DebugLog(Helper.Translation.Get("Debug.OptionDisabledRuntime", new { option = Helper.Translation.Get("Config.HideMiniFridges") }), LogLevel.Info);
-            }
+                if (Config.HideMiniFridges){
+                    DebugLog(Helper.Translation.Get("Debug.OptionEnabledRuntime", new { option = Helper.Translation.Get("Config.HideMiniFridges") }), LogLevel.Info);
+                }else{
+                    DebugLog(Helper.Translation.Get("Debug.OptionDisabledRuntime", new { option = Helper.Translation.Get("Config.HideMiniFridges") }), LogLevel.Info);
+                }
 
-            DebugLog(Helper.Translation.Get("Debug.KeySetTo", new { option = "NextFridgeTabButton" }) + Config.NextFridgeTabButton.ToString() + ".", LogLevel.Info);
-            DebugLog(Helper.Translation.Get("Debug.KeySetTo", new { option = "LastFridgeTabButton" }) + Config.LastFridgeTabButton.ToString() + ".", LogLevel.Info);
+                DebugLog(Helper.Translation.Get("Debug.KeySetTo", new { option = "NextFridgeTabButton" }) + Config.NextFridgeTabButton.ToString() + ".", LogLevel.Info);
+                DebugLog(Helper.Translation.Get("Debug.KeySetTo", new { option = "LastFridgeTabButton" }) + Config.LastFridgeTabButton.ToString() + ".", LogLevel.Info);
 
+            }
+  
             //* Start FridgeManager once we are all setup & before the start of the first day.
             FridgeManager = new FridgeManager(_instance);
 
@@ -89,23 +97,23 @@ namespace ExpandedFridgeAGAIN
         {
             if (str == "ShowDebugMessages"){
                 if((bool)obj){
-                    DebugLog(Helper.Translation.Get("Debug.OptionEnabledRuntime", new { option = str }), LogLevel.Info);
+                    DebugLog(Helper.Translation.Get("Debug.OptionEnabledRuntime", new { option = str }));
                 }else{
-                    DebugLog(Helper.Translation.Get("Debug.OptionDisabledRuntime", new { option = str }), LogLevel.Info);
+                    DebugLog(Helper.Translation.Get("Debug.OptionDisabledRuntime", new { option = str }));
                 }
             }
             else if(str == "HideMiniFridges"){
                 if((bool)obj){
-                    DebugLog(Helper.Translation.Get("Debug.OptionEnabledRuntime", new { option = str }), LogLevel.Info);
+                    DebugLog(Helper.Translation.Get("Debug.OptionEnabledRuntime", new { option = str }));
                 }else{
-                    DebugLog(Helper.Translation.Get("Debug.OptionDisabledRuntime", new { option = str }), LogLevel.Info);
+                    DebugLog(Helper.Translation.Get("Debug.OptionDisabledRuntime", new { option = str }));
                 }
             }
             else if(str == "NextFridgeTabButton"){
-                DebugLog(Helper.Translation.Get("Debug.KeySetTo", new { option = str }) + obj.ToString() + ".", LogLevel.Info);
+                DebugLog(Helper.Translation.Get("Debug.KeySetTo", new { option = str }) + obj.ToString() + ".");
             }
             else if(str == "LastFridgeTabButton"){
-                DebugLog(Helper.Translation.Get("Debug.KeySetTo", new { option = str }) + obj.ToString() + ".", LogLevel.Info);
+                DebugLog(Helper.Translation.Get("Debug.KeySetTo", new { option = str }) + obj.ToString() + ".");
             }
         }
 

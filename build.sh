@@ -1,2 +1,3 @@
 echo off
-dotnet build .
+dotnet build --nologo --configuration Release .
+rm -rf obj
