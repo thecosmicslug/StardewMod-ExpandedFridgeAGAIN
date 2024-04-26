@@ -21,6 +21,7 @@ namespace ExpandedFridgeAGAIN
             _instance = this;
 
             //* Show debug info etc.
+            //TODO: Investigate why this crashes now.
             //var buildTime = modUtilities.GetBuildDate(Assembly.GetExecutingAssembly());
             //buildTime = buildTime.ToLocalTime();
             DebugLog("ExpandedFridgeAGAIN v" + GetType().Assembly.GetName().Version.ToString(3) +" (" + Constants.TargetPlatform + ") loaded.", LogLevel.Info);
