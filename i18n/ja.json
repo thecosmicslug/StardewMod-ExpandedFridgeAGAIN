@@ -1,0 +1,21 @@
+{
+    "Config.ShowDebugMessages": "デバッグログを有効にする",
+    "Config.ShowDebugMessagesDesc": "デバッグログをSMAPIコンソールに出力し、バグ探索に役立てる。",
+    "Config.HideMiniFridges": "ミニ冷蔵庫を隠す",
+    "Config.HideMiniFridgesDesc": "毎朝、マップ外にミニ冷蔵庫を隠す。",
+    "Config.NextFridgeTabButton": "次タブのキー",
+    "Config.NextFridgeTabButtonDesc": "次のタブに移動するキーまたはボタン。",
+    "Config.LastFridgeTabButton": "前タブのキー",
+    "Config.LastFridgeTabButtonDesc": "前のタブに移動するキーまたはボタン。",
+
+    "Debug.FridgeManagerRunning": "FridgeManagerが実行中。",
+    "Debug.ConfigurationLoaded": "config.jsonから読み込まれた設定",
+    "Debug.GenericModConfigMenuFound": "GenericModConfigMenuのセットアップが正常に完了しました！",
+    "Debug.GenericModConfigMenuMissing": "GenericModConfigMenuが見つかりません！設定はconfig.jsonから編集できます。",
+    "Debug.OptionEnabledRuntime": "{{option}}が有効になりました。",
+    "Debug.OptionDisabledRuntime": "{{option}}が無効になりました。",
+    "Debug.KeySetTo": "{{option}}がキーを使用するように設定されました。",
+    "Debug.BetterChestsDetected": "警告：BetterChestsが検出されました！このMODはBetterChestsと互換性がありません。",
+    "Debug.ExpandedFridgeDetected": "警告：ExpandedFridgeが検出されました！ExpandedFridgeと互換性がありません。"
+
+}
