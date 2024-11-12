@@ -11,7 +11,8 @@
   "Author": "TheCosmicSlug",
   "Version": "3.2.1",
   "Description": "Hide mini fridges and access them all from the house fridge.",
-  "MinimumApiVersion": "4.0",
+  "MinimumApiVersion": "4.1",
+  "MinimumGameVersion": "1.6.14",
   "EntryDll": "ExpandedFridgeAGAIN.dll",
   "UpdateKeys": [
     "GitHub:thecosmicslug/StardewMod-ExpandedFridgeAGAIN"

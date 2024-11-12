@@ -1,14 +1,41 @@
 {
     "version": "2.0.0",
     "tasks": [
-        {
-            "label": "build dll",
+      {
+        "label": "build",
+        "command": "dotnet",
+        "type": "process",
+        "args": [
+          "build",
+          "${workspaceFolder}/ExpandedFridgeAGAIN.csproj",
+          "/property:GenerateFullPaths=true",
+          "/consoleloggerparameters:NoSummary"
+        ],
+        "problemMatcher": "$msCompile",
+        "group": {
+          "kind": "build",
+          "isDefault": true           
+        }
+      },
+      {
+            "label": "build Release",
+            "command": "dotnet",
             "type": "process",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "command": "${workspaceFolder}/build.sh",
+            "args": [
+                "build",
+                "${workspaceFolder}/ExpandedFridgeAGAIN.csproj",
+                "-c",
+                "Release"
+            ],
+            "problemMatcher": "$msCompile"
+      },   
+      {
+        "label": "bump version",
+        "type": "shell",
+        "group": {
+            "kind": "build"
         },
+        "command": "${workspaceFolder}/bump.sh patch ExpandedFridgeAGAIN.csproj"
+    }
     ]
-}
+  }

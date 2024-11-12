@@ -7,6 +7,10 @@
     <Description>Hide mini fridges and access them all from the house fridge.</Description>
     <UpdateKeys>GitHub:thecosmicslug/StardewMod-ExpandedFridgeAGAIN</UpdateKeys>
     <UniqueId>TheCosmicSlug.ExpandedFridgeAGAIN</UniqueId>
+    <BaseManifest>new</BaseManifest>
+    <Version_AppendConfiguration>false</Version_AppendConfiguration>
+    <MinimumApiVersion>auto</MinimumApiVersion>
+    <MinimumGameVersion>auto</MinimumGameVersion>
     <AssemblyName>ExpandedFridgeAGAIN</AssemblyName>
     <RootNamespace>ExpandedFridgeAGAIN</RootNamespace>
     <TargetFramework>net6.0</TargetFramework>
@@ -14,13 +18,12 @@
     <OutputPath>.\bin\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-    <BaseManifest>new</BaseManifest>
-    <MinimumApiVersion>auto</MinimumApiVersion>
     <SourceRevisionId>build$([System.DateTime]::UtcNow.ToString("yyyyMMddHHmmss"))</SourceRevisionId>
     <Deterministic>false</Deterministic>
+    <CheckEolTargetFramework>false</CheckEolTargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Pathoschild.Stardew.ModBuildConfig" Version="4.1.1" />
-    <PackageReference Include="Leclair.Stardew.ModManifestBuilder" Version="2.1.0" />
+    <PackageReference Include="Leclair.Stardew.ModManifestBuilder" Version="2.3.1" />
+    <PackageReference Include="Pathoschild.Stardew.ModBuildConfig" Version="4.3.1" />
   </ItemGroup>
 </Project>

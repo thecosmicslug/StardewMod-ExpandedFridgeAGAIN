@@ -1,25 +1,26 @@
 {
     "version": "0.2.0",
     "configurations": [
-        {
-            "name": "Build",
-            "type":"coreclr",
-            "request": "launch",
-            "program": "sh",
-            "args": ["${workspaceFolder}/build.sh"],
-            "cwd": "${workspaceFolder}",
-            "stopAtEntry": false
-        },
-        {
-            "name": "Build & Run",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "build dll",
-            "program": "${env:HOME}/.steam/steam/steamapps/common/Stardew Valley/StardewValley",
-            "args": [""],
-            "cwd": "${workspaceFolder}",
-            "stopAtEntry": false
-
-        }
+      {
+        "name": ".NET Core Launch",
+        "type": "coreclr",
+        "request": "launch",
+        "preLaunchTask": "build",
+        "program": "${env:HOME}/.steam/steam/steamapps/common/Stardew Valley/StardewModdingAPI",
+        "args": [],
+        "cwd": "${workspaceFolder}",
+        "console": "internalConsole",
+        "stopAtEntry": false,
+        "logging": {
+          "moduleLoad": false,
+          "threadExit": false,
+          "processExit": false
+      }
+      },
+      {
+        "name": ".NET Core Attach",
+        "type": "coreclr",
+        "request": "attach"
+      }
     ]
-}
+  }
