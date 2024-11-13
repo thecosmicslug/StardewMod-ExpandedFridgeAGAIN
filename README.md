@@ -72,5 +72,5 @@ Use inventory tabs, mouse scroll wheel or game-pad shoulder triggers to switch b
 - 1.2.2 ﻿- Fixed bug where fridge would not work if it was empty.
 - 1.2.1 ﻿- Clicking and opening/closing now has sounds.
 - 1.2.0 ﻿- Reworked menu manipulation. Should be more stable and work better with Chests Anywhere.
-- 1.1.0  ﻿- Right clicking now works.
+- 1.1.0 ﻿- Right clicking now works.
 
