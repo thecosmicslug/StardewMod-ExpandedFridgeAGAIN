@@ -53,6 +53,8 @@ Use inventory tabs, mouse scroll wheel or game-pad shoulder triggers to switch b
 
 
 ## Change log:
+- 3.2.2 ﻿- Added Japanese & Brazilian Portuguese translations. improved build process.
+- 3.2.1 ﻿- small bugfixes.
 - 3.2.0 ﻿- Recompiled & fixed for SDV 1.6
 - 3.1.0 ﻿- Forked & Applied UI Scale bugfix.
 - 3.0.0 ﻿- Mini Fridge Update (rework of entire mod).
