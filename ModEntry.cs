@@ -3,6 +3,7 @@ using StardewModdingAPI.Events;
 
 using System;
 using System.Reflection;
+using System.Globalization;
 using System.Collections.Generic;
 
 namespace ExpandedFridgeAGAIN
@@ -20,16 +21,18 @@ namespace ExpandedFridgeAGAIN
             //* Setup DebugLog
             _instance = this;
 
-            //* Show debug info etc.
-            //TODO: Investigate why this crashes now.
-            //var buildTime = modUtilities.GetBuildDate(Assembly.GetExecutingAssembly());
-            //buildTime = buildTime.ToLocalTime();
-            DebugLog("ExpandedFridgeAGAIN v" + GetType().Assembly.GetName().Version.ToString(3) +" (" + Constants.TargetPlatform + ") loaded.", LogLevel.Info);
-            //DebugLog("Binary Compiled: " + buildTime.ToString("d/M/yyyy h:mm tt"));
-
             //* Load Config
             Config = Helper.ReadConfig<ModConfig>();
             DebugLog(Helper.Translation.Get("Debug.ConfigurationLoaded"));
+
+            //* Show debug info etc.
+            //TODO: Investigate why this crashes now.
+            var buildTime = GetBuildDate(Assembly.GetExecutingAssembly());
+            buildTime = buildTime.ToLocalTime();
+            DebugLog("ExpandedFridgeAGAIN v" + GetType().Assembly.GetName().Version.ToString(3) +" (" + Constants.TargetPlatform + ") loaded.", LogLevel.Info);
+            if (Config.ShowDebugMessages){
+                DebugLog("Binary Compiled: " + buildTime.ToString("d/M/yyyy h:mm tt"), LogLevel.Info);
+            }
 
             //* Prepare Event Hooks
             Helper.Events.GameLoop.GameLaunched += onLaunched;
@@ -38,6 +41,7 @@ namespace ExpandedFridgeAGAIN
          //* Setup for GenericModConfigMenu support.
         private void onLaunched(object sender, GameLaunchedEventArgs e)
         {
+
             //* Hook into GMCM
             var api = Helper.ModRegistry.GetApi<GenericModConfigMenuAPI>("spacechase0.GenericModConfigMenu");
             if (api != null){
@@ -116,6 +120,23 @@ namespace ExpandedFridgeAGAIN
             else if(str == "LastFridgeTabButton"){
                 DebugLog(Helper.Translation.Get("Debug.KeySetTo", new { option = str }) + obj.ToString() + ".");
             }
+        }
+
+        public DateTime GetBuildDate(Assembly assembly){
+
+            const string BuildVersionMetadataPrefix = "+build";
+            var attribute = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
+            if (attribute?.InformationalVersion != null){
+                var value = attribute.InformationalVersion;
+                var index = value.IndexOf(BuildVersionMetadataPrefix);
+                if (index > 0){
+                    value = value.Substring(index + BuildVersionMetadataPrefix.Length);
+                    if (DateTime.TryParseExact(value, "yyyyMMddHHmmss", CultureInfo.InvariantCulture, DateTimeStyles.None, out var result)){
+                        return result;
+                    }
+                }
+            }
+            return default;
         }
 
         //* Prints message in console log with given log level if enabled.

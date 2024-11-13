@@ -11,11 +11,7 @@
           "/property:GenerateFullPaths=true",
           "/consoleloggerparameters:NoSummary"
         ],
-        "problemMatcher": "$msCompile",
-        "group": {
-          "kind": "build",
-          "isDefault": true           
-        }
+        "problemMatcher": "$msCompile"
       },
       {
             "label": "build Release",
@@ -27,7 +23,11 @@
                 "-c",
                 "Release"
             ],
-            "problemMatcher": "$msCompile"
+            "problemMatcher": "$msCompile",
+            "group": {
+              "kind": "build",
+              "isDefault": true           
+            }
       },   
       {
         "label": "bump version",

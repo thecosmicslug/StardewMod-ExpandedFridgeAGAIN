@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <Name>ExpandedFridgeAGAIN</Name>
-    <Version>3.2.1</Version>
+    <Version>3.2.2</Version>
     <Authors>TheCosmicSlug</Authors>
     <Description>Hide mini fridges and access them all from the house fridge.</Description>
     <UpdateKeys>GitHub:thecosmicslug/StardewMod-ExpandedFridgeAGAIN</UpdateKeys>

@@ -1,0 +1,22 @@
+{
+    "Config.ShowDebugMessages": "Habilitar registro de depuração",
+    "Config.ShowDebugMessagesDesc": "Gere logs de depuração para o console SMAPI para ajudar na localização de bugs.",
+    "Config.HideMiniFridges": "Ocultar minigeladeiras",
+    "Config.HideMiniFridgesDesc": "Esconda minigeladeiras fora do mapa todas as manhãs.",
+    "Config.NextFridgeTabButton": "Tecla próxima geladeira",
+    "Config.NextFridgeTabButtonDesc": "Botão para navegar para a próxima guia.",
+    "Config.LastFridgeTabButton": "Tecla geladeira anterior.",
+    "Config.LastFridgeTabButtonDesc": "Botão para navegar para a guia anterior.",
+
+    "Debug.FridgeManagerRunning": "O 'Gerenciador de Geladeira' está em execução.",
+    "Debug.ConfigurationLoaded": "Configuração carregada de 'config.json'",
+    "Debug.GenericModConfigMenuFound": "Configuração do 'Menu de Configuração de Mod Genérico' concluída com sucesso!",
+    "Debug.GenericModConfigMenuMissing": "'Menu de Configuração de Mod Genérico' não encontrado! A configuração pode ser editada em 'config.json'",
+    "Debug.OptionEnabledRuntime": "'{{option}}' foi habilitado.",
+    "Debug.OptionDisabledRuntime": "'{{option}}'foi dehabilitado.",
+    "Debug.KeySetTo": "'{{option}}' foi configurado para usar a tecla: ",
+    "Debug.BetterChestsDetected": "AVISO: 'BetterChests' detectado! Este mod é incompatível com 'BetterChests'.",
+    "Debug.ExpandedFridgeDetected": "AVISO: 'ExpandedFridge' detectado! Este mod é uma reescrita e é incompatível com 'ExpandedFridge'."
+
+}
+
