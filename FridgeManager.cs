@@ -57,7 +57,7 @@ namespace ExpandedFridgeAGAIN
         }
 
         //* Main function that manages the mini-fridges each save.
-        private void MoveAllMiniFridges(bool bHide)
+        public void MoveAllMiniFridges(bool bHide)
         {
             ModEntry.DebugLog("Searching for fridge locations...");
             foreach (GameLocation location in GetFridgeLocations()){
@@ -83,7 +83,7 @@ namespace ExpandedFridgeAGAIN
         }
 
         //* Get an array of all locations that have fridges.
-        private GameLocation[] GetFridgeLocations(){
+        public GameLocation[] GetFridgeLocations(){
             
             //* Check Locations has changed with v1.5
             List<GameLocation> gLocations = new List<GameLocation>();
@@ -137,6 +137,10 @@ namespace ExpandedFridgeAGAIN
             if (Game1.IsMasterGame && _entry.Config.HideMiniFridges){
                 ModEntry.DebugLog("OnDayStarted(): Hiding mini-fridges from view.");
                 MoveAllMiniFridges(true);
+            }else{
+                //* Restore out of bounds mini-fridges that might have got stuck.
+                ModEntry.DebugLog("OnDayStarted(): Checking for mini-fridges out of bounds..");
+                MoveAllMiniFridges(false);
             }
         }
         

@@ -9,10 +9,10 @@
   "UniqueID": "TheCosmicSlug.ExpandedFridgeAGAIN",
   "Name": "ExpandedFridgeAGAIN",
   "Author": "TheCosmicSlug",
-  "Version": "3.2.2",
+  "Version": "3.2.3",
   "Description": "Hide mini fridges and access them all from the house fridge.",
-  "MinimumApiVersion": "4.1",
-  "MinimumGameVersion": "1.6.14",
+  "MinimumApiVersion": "4.2",
+  "MinimumGameVersion": "1.6.15",
   "EntryDll": "ExpandedFridgeAGAIN.dll",
   "UpdateKeys": [
     "GitHub:thecosmicslug/StardewMod-ExpandedFridgeAGAIN"

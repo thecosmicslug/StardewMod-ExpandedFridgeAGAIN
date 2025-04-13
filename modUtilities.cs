@@ -12,7 +12,7 @@ using StardewModdingAPI;
 namespace ExpandedFridgeAGAIN
 {
     //* Collections of static methods and variables.
-    class modUtilities
+    static class modUtilities
     {
         public const int MiniFridgeSheetIndex = 216;
         private const int OutOfBoundsTileY = -300;
@@ -33,14 +33,15 @@ namespace ExpandedFridgeAGAIN
             for (int h = 0; h <= location.map.Layers[0].LayerHeight; h++)
                 for (int w = 0; w <= location.map.Layers[0].LayerWidth; w++)
                     //* check if tile in width and height is placeable and not on wall
-                    if (!location.IsTileBlockedBy(new Vector2(w, h)) && (!(location is DecoratableLocation) || !(location as DecoratableLocation).isTileOnWall(w, h)))
+                    if(isTileOccupiedForPlacement(location,new Vector2(w, h)) && (!(location is DecoratableLocation) || !(location as DecoratableLocation).isTileOnWall(w, h))){
                         return new Vector2(w, h);
+                    }
 
             int y = 0;
             int x = 0;
 
             //* move in y direction untill no other potential offmap objects are there
-            while (location.isObjectAtTile(x, y))
+            while(!isTileOccupiedForPlacement(location,new Vector2(x, y)))
                 y++;
 
             ModEntry.DebugLog("WARNING: Object might become placed out of bounds at tile X:" + x + " Y:" + y + " in " + location.NameOrUniqueName, LogLevel.Warn);
@@ -48,10 +49,16 @@ namespace ExpandedFridgeAGAIN
             //* return that position
             return new Vector2(x, y);
         }
-
+    
+        private static bool isTileOccupiedForPlacement(this GameLocation location, Vector2 tileLocation, Object toPlace = null)
+        {
+            return location.CanItemBePlacedHere(tileLocation, toPlace != null && toPlace.isPassable());
+            
+        }
         //* Creates a new inventory menu from a chest with option for showing the color picker.
         public static ItemGrabMenu GetNewItemGrabMenuFromChest(Chest chest, bool showColorPicker)
         {
+            //TODO: Fix missing Colour picker/ Added Junimo button.
             var igm = new ItemGrabMenu((IList<Item>)chest.Items, false, true, new
                     InventoryMenu.highlightThisItem(InventoryMenu.highlightAllItems),
                     new ItemGrabMenu.behaviorOnItemSelect(chest.grabItemFromInventory), (string)null,
@@ -128,8 +135,9 @@ namespace ExpandedFridgeAGAIN
         //* Moves all mini fridges in the location back into map bounds.
         public static void ShowMiniFridgesInLocation(GameLocation location)
         {
-            //* find all mini-fridges positions.
             List<Vector2> miniFridgePositions = new List<Vector2>();
+
+            //* find all mini-fridges positions.
             foreach(StardewValley.Object obj in location.objects.Values){
                 if (obj != null && obj.bigCraftable.Value && obj is Chest && obj.ParentSheetIndex == MiniFridgeSheetIndex){
                     if (!IsPointInsideMapBounds(obj.TileLocation, location)){

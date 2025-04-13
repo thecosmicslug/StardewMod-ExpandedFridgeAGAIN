@@ -14,7 +14,15 @@ namespace ExpandedFridgeAGAIN
         private static ModEntry _instance = null;
         public ModConfig Config { get; private set; }
         public FridgeManager FridgeManager { get; private set; }
-    
+
+        private void DebugRestoreAllFridges (string command, string[] arg){
+            FridgeManager.MoveAllMiniFridges(false);
+        }
+
+        private void DebugHideAllFridges (string command, string[] arg){
+            FridgeManager.MoveAllMiniFridges(true);
+        }
+
         //* Setup instance and load our first event-hooks
         public override void Entry(IModHelper helper)
         {
@@ -26,7 +34,6 @@ namespace ExpandedFridgeAGAIN
             DebugLog(Helper.Translation.Get("Debug.ConfigurationLoaded"));
 
             //* Show debug info etc.
-            //TODO: Investigate why this crashes now.
             var buildTime = GetBuildDate(Assembly.GetExecutingAssembly());
             buildTime = buildTime.ToLocalTime();
             DebugLog("ExpandedFridgeAGAIN v" + GetType().Assembly.GetName().Version.ToString(3) +" (" + Constants.TargetPlatform + ") loaded.", LogLevel.Info);
@@ -95,6 +102,9 @@ namespace ExpandedFridgeAGAIN
             //* Start FridgeManager once we are all setup & before the start of the first day.
             FridgeManager = new FridgeManager(_instance);
 
+            //* Debug Commands
+            Helper.ConsoleCommands.Add("FridgeExpandedAGAIN_ShowFridges", "Moves all mini-fridges back into the cabins.", this.DebugRestoreAllFridges);
+            Helper.ConsoleCommands.Add("FridgeExpandedAGAIN_HideFridges", "Moves all mini-fridges out of view.", this.DebugHideAllFridges);
         }
 
         //* The method invoked when we detect configuration changes.
@@ -110,8 +120,14 @@ namespace ExpandedFridgeAGAIN
             else if(str == "HideMiniFridges"){
                 if((bool)obj){
                     DebugLog(Helper.Translation.Get("Debug.OptionEnabledRuntime", new { option = str }));
+                    //* Hide the mini-fridges straight away.
+                    string[] arrTeamMembers = new string[] { "" };
+                    DebugHideAllFridges("",arrTeamMembers);
                 }else{
                     DebugLog(Helper.Translation.Get("Debug.OptionDisabledRuntime", new { option = str }));
+                    //* Restore the mini-fridges straight away.
+                    string[] arrTeamMembers = new string[] { "" };
+                    DebugRestoreAllFridges("",arrTeamMembers);
                 }
             }
             else if(str == "NextFridgeTabButton"){
