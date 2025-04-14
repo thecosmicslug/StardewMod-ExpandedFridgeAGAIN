@@ -79,9 +79,7 @@ namespace ExpandedFridgeAGAIN
             }
 
             //* Check for incompatible mods.
-            //TODO: Check for more incompatible mods.
-            // ExpandedStorage ??
-            // ColouredChests ??
+            //TODO: Check for more incompatible mods. Check BetterChests again?
             bool BetterChestsLoaded = Helper.ModRegistry.IsLoaded("furyx639.BetterChests");
             if (BetterChestsLoaded){
                 DebugLog(Helper.Translation.Get("Debug.BetterChestsDetected"), LogLevel.Warn);
@@ -106,18 +104,16 @@ namespace ExpandedFridgeAGAIN
 
             }
 
-            //*Setup Harmony Hook
+            //*Setup Harmony
             var harmony = new Harmony(this.ModManifest.UniqueID);
-            try
-            {
+            try{
                 DebugLog("Setting up Harmony Patch..");
                 _ = harmony.Patch(
                     AccessTools.Method(typeof(ItemGrabMenu), nameof(ItemGrabMenu.CanHaveColorPicker)),
                     postfix: new HarmonyMethod(typeof(ModEntry), nameof(ItemGrabMenu_CanHaveColorPicker_postfix)));
             }
-            catch (Exception)
-            {
-                DebugLog("Failed to apply patches", LogLevel.Error);
+            catch (Exception){
+                DebugLog("Failed to apply Harmony patch: ItemGrabMenu.CanHaveColorPicker()", LogLevel.Error);
             }
   
             //* Start FridgeManager once we are all setup & before the start of the first day.
@@ -178,7 +174,7 @@ namespace ExpandedFridgeAGAIN
 
     private static void ItemGrabMenu_CanHaveColorPicker_postfix(ItemGrabMenu __instance, ref bool __result)
     {
-        // Taken from ColorfulChests
+        // Taken from ColorfulChests - https://github.com/LeFauxMatt/ColorfulChests
         if (!__result &&
             __instance.sourceItem is Chest { playerChest.Value: true } chest &&
             Game1.bigCraftableData.TryGetValue(chest.ItemId, out var bigCraftableData))
