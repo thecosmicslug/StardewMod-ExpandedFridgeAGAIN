@@ -1,19 +1,20 @@
 
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Runtime.InteropServices;
+
 using StardewValley;
 using StardewValley.Objects;
 using StardewValley.Menus;
 using StardewValley.Locations;
-using Microsoft.Xna.Framework;
-using System.Collections.Specialized;
-using System.Runtime.InteropServices;
 using StardewModdingAPI;
+using Microsoft.Xna.Framework;
 
 namespace ExpandedFridgeAGAIN
 {
     //* Collections of static methods and variables.
-    static class modUtilities
-    {
+    static class modUtilities{
+        
         public const int MiniFridgeSheetIndex = 216;
         private const int OutOfBoundsTileY = -300;
 
@@ -24,11 +25,14 @@ namespace ExpandedFridgeAGAIN
         private static bool IsPointInsideMapBounds(Vector2 point, GameLocation location){
             return location.isTileOnMap(point);
         }
+        private static bool isTileOccupiedForPlacement(this GameLocation location, Vector2 tileLocation, Object toPlace = null){
+            return location.CanItemBePlacedHere(tileLocation, toPlace != null && toPlace.isPassable());
+        }
 
         //* Get a free tile for chest placement in a location.
         //WARNING: This can return a value outside the map bounds.
-        private static Vector2 GetFreeTileInLocation(GameLocation location)
-        {
+        private static Vector2 GetFreeTileInLocation(GameLocation location){
+
             for (int h = 0; h <= location.map.Layers[0].LayerHeight; h++)
                 for (int w = 0; w <= location.map.Layers[0].LayerWidth; w++)
                     //* check if tile in width and height is placeable and not on wall
@@ -49,14 +53,8 @@ namespace ExpandedFridgeAGAIN
             return new Vector2(x, y);
         }
     
-        private static bool isTileOccupiedForPlacement(this GameLocation location, Vector2 tileLocation, Object toPlace = null)
-        {
-            return location.CanItemBePlacedHere(tileLocation, toPlace != null && toPlace.isPassable());
-            
-        }
         //* Creates a new inventory menu from a chest with option for showing the color picker.
-        public static ItemGrabMenu GetNewItemGrabMenuFromChest(Chest chest, bool showColorPicker)
-        {
+        public static ItemGrabMenu GetNewItemGrabMenuFromChest(Chest chest, bool showColorPicker){
 
             var igm = new ItemGrabMenu((IList<Item>)chest.Items, false, true,
                     new InventoryMenu.highlightThisItem(InventoryMenu.highlightAllItems),
@@ -65,23 +63,23 @@ namespace ExpandedFridgeAGAIN
                      false, true, true, true, true, 1,
                     !showColorPicker ? null : (Item)chest, !showColorPicker ? 0 : 1, (object)chest);
 
-            if (igm.chestColorPicker != null)
-            {
+            if (igm.chestColorPicker != null){
                 var r = igm.colorPickerToggleButton.bounds;
-                r.Y -= 128+32;
+                // ?? Not sure why the colour picker was moved up top??
+                // //r.Y -= 128+32;
+                r.Y -= 16;
                 igm.colorPickerToggleButton.bounds = r;
                 igm.chestColorPicker.itemToDrawColored = null;
             }
-            if (igm.fillStacksButton != null)
-            {
+            if (igm.fillStacksButton != null){
                 igm.fillStacksButton.bounds = new Rectangle(igm.xPositionOnScreen + igm.width, igm.yPositionOnScreen + igm.height / 3 - 64 - 64 - 16, 64, 64);
             }
             return igm;
         }
 
         //* Get an array of mini fridge chests that exists in given location. They are sorted by their tile coordinates with Y as higher priority.
-        public static Chest[] GetAllMiniFridgesInLocation(GameLocation location)
-        {
+        public static Chest[] GetAllMiniFridgesInLocation(GameLocation location){
+
             List<Chest> miniFridges = new List<Chest>();
             foreach(StardewValley.Object obj in location.Objects.Values){
                 if (obj != null && obj.bigCraftable.Value && obj is Chest && obj.ParentSheetIndex == MiniFridgeSheetIndex){
@@ -93,8 +91,8 @@ namespace ExpandedFridgeAGAIN
         }
         
         //* Moves all mini fridges in all farmhouses out of the map bounds.
-        public static void HideMiniFridgesInLocation(GameLocation location)
-        {
+        public static void HideMiniFridgesInLocation(GameLocation location){
+
             List<Vector2> miniFridgePositions = new List<Vector2>();
 
             //* find all mini-fridges positions.
@@ -134,8 +132,8 @@ namespace ExpandedFridgeAGAIN
         }
 
         //* Moves all mini fridges in the location back into map bounds.
-        public static void ShowMiniFridgesInLocation(GameLocation location)
-        {
+        public static void ShowMiniFridgesInLocation(GameLocation location){
+
             List<Vector2> miniFridgePositions = new List<Vector2>();
 
             //* find all mini-fridges positions.

@@ -1,15 +1,15 @@
-using StardewModdingAPI;
-using StardewModdingAPI.Events;
-
 using System;
 using System.Reflection;
 using System.Globalization;
 using System.Collections.Generic;
 
-using HarmonyLib;
 using StardewValley;
 using StardewValley.Objects;
 using StardewValley.Menus;
+
+using StardewModdingAPI;
+using StardewModdingAPI.Events;
+using HarmonyLib;
 
 namespace ExpandedFridgeAGAIN
 {
@@ -29,8 +29,8 @@ namespace ExpandedFridgeAGAIN
         }
 
         //* Setup instance and load our first event-hooks
-        public override void Entry(IModHelper helper)
-        {
+        public override void Entry(IModHelper helper){
+            
             //* Setup DebugLog
             _instance = this;
 
@@ -51,8 +51,7 @@ namespace ExpandedFridgeAGAIN
         }
 
          //* Setup for GenericModConfigMenu support.
-        private void onLaunched(object sender, GameLaunchedEventArgs e)
-        {
+        private void onLaunched(object sender, GameLaunchedEventArgs e){
 
             //* Hook into GMCM
             var api = Helper.ModRegistry.GetApi<GenericModConfigMenuAPI>("spacechase0.GenericModConfigMenu");
@@ -125,8 +124,8 @@ namespace ExpandedFridgeAGAIN
         }
 
         //* The method invoked when we detect configuration changes.
-        private void onFieldChanged(string str, object obj)
-        {
+        private void onFieldChanged(string str, object obj){
+
             if (str == "ShowDebugMessages"){
                 if((bool)obj){
                     DebugLog(Helper.Translation.Get("Debug.OptionEnabledRuntime", new { option = str }));
@@ -172,25 +171,25 @@ namespace ExpandedFridgeAGAIN
             return default;
         }
 
-    private static void ItemGrabMenu_CanHaveColorPicker_postfix(ItemGrabMenu __instance, ref bool __result)
-    {
-        // Taken from ColorfulChests - https://github.com/LeFauxMatt/ColorfulChests
-        if (!__result &&
-            __instance.sourceItem is Chest { playerChest.Value: true } chest &&
-            Game1.bigCraftableData.TryGetValue(chest.ItemId, out var bigCraftableData))
-        {
-            __result = true;
+        private static void ItemGrabMenu_CanHaveColorPicker_postfix(ItemGrabMenu __instance, ref bool __result){
+            
+            // Taken from ColorfulChests - https://github.com/LeFauxMatt/ColorfulChests
+            if (!__result &&
+                __instance.sourceItem is Chest { playerChest.Value: true } chest &&
+                Game1.bigCraftableData.TryGetValue(chest.ItemId, out var bigCraftableData))
+            {
+                __result = true;
+            }
         }
-    }
         //* Prints message in console log with given log level if enabled.
-        public static void DebugLog(string message, LogLevel level = LogLevel.Debug)
-        {
+        public static void DebugLog(string message, LogLevel level = LogLevel.Debug){
+
             if(level != LogLevel.Debug){
                 _instance.Monitor.Log(message, level);
             }else{
-            if (_instance.Config.ShowDebugMessages){
-                _instance.Monitor.Log(message, level);
-            }
+                if (_instance.Config.ShowDebugMessages){
+                    _instance.Monitor.Log(message, level);
+                }
             }
         }
     }
