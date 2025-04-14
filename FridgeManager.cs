@@ -223,9 +223,15 @@ namespace ExpandedFridgeAGAIN
             }
 
             _menu = menu;
+
+            //* No Colour option for main fridge.
+            _menu.chestColorPicker = null;
+            _menu.colorPickerToggleButton = null;
+
             _entry.Helper.Events.Display.RenderingActiveMenu += DrawBeforeActiveMenu;
             _entry.Helper.Events.Input.ButtonPressed += RecieveButtonPressed;
             _entry.Helper.Events.Input.MouseWheelScrolled += RecieveMouseWheelScrolled;
+
             UpdateCustomComponents();
             _customMenuInitiated = true;
 
@@ -295,32 +301,28 @@ namespace ExpandedFridgeAGAIN
                 if (tab == 0)
                 {
                     //* release mutex if mini fridge selected
-                    if (_selectedTab > 0 && _selectedTab < _fridges.Count)
+                    if (_selectedTab > 0 && _selectedTab < _fridges.Count){
                         _fridges[_selectedTab].mutex.ReleaseLock();
-
+                    }
+                        
                     _selectedTab = tab;
-                    if (tab > 0)
-                        _menu = modUtilities.GetNewItemGrabMenuFromChest(_fridges[tab], true);
-                    else
-                        _menu = modUtilities.GetNewItemGrabMenuFromChest(_fridges[tab], false);
+                    _menu = modUtilities.GetNewItemGrabMenuFromChest(_fridges[tab], false);
 
                     Game1.activeClickableMenu = _menu;
                     Game1.playSound("smallSelect");
-                }
-                else
-                {
+
+                }else{
+                    
                     //* request mini fridge to be opened
                     _fridges[tab].mutex.RequestLock(() =>
                     {
                         //* release mutex if mini fridge selected
-                        if (_selectedTab > 0 && _selectedTab < _fridges.Count)
+                        if (_selectedTab > 0 && _selectedTab < _fridges.Count){
                             _fridges[_selectedTab].mutex.ReleaseLock();
-
+                        }
+                            
                         _selectedTab = tab;
-                        if (tab > 0)
-                            _menu = modUtilities.GetNewItemGrabMenuFromChest(_fridges[tab], true);
-                        else
-                            _menu = modUtilities.GetNewItemGrabMenuFromChest(_fridges[tab], false);
+                        _menu = modUtilities.GetNewItemGrabMenuFromChest(_fridges[tab], true);
 
                         Game1.activeClickableMenu = _menu;
                         Game1.playSound("smallSelect");
@@ -335,11 +337,11 @@ namespace ExpandedFridgeAGAIN
         //* Draws the custom overlay for the inventory menu.
         private void DrawBeforeActiveMenu(object sender, RenderingActiveMenuEventArgs e)
         {
-            var igm = (Game1.activeClickableMenu as ItemGrabMenu);
-
             //* never allow an ItemGrabMenu to render its background while we are drawing FridgeMenu, it will do it instead.
-            if (igm != null && igm.drawBG)
+            var igm = (Game1.activeClickableMenu as ItemGrabMenu);
+            if (igm != null && igm.drawBG){
                 igm.drawBG = false;
+            }
             e.SpriteBatch.Draw(Game1.fadeToBlackRect, new Rectangle(0, 0, Game1.uiViewport.Width, Game1.uiViewport.Height), Color.Black * 0.5f);
 
             //* if flagged, update tabs colors
@@ -407,8 +409,7 @@ namespace ExpandedFridgeAGAIN
                     int xpos = tab.bounds.X - (_rootTab * Game1.tileSize);
 
                     var r = new Rectangle(xpos, tab.bounds.Y, tab.bounds.Width, tab.bounds.Height);
-                    if (r.Contains(mouse))
-                    {
+                    if (r.Contains(mouse)){
                         SetSelectedTab(index);
                         break;
                     }

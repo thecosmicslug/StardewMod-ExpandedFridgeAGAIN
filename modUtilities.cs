@@ -21,8 +21,7 @@ namespace ExpandedFridgeAGAIN
         public static GameLocation CurrentLocation { get { return Game1.player.currentLocation; } }
         
         //* Wrapper for checking point inside map bounds.
-        private static bool IsPointInsideMapBounds(Vector2 point, GameLocation location)
-        {
+        private static bool IsPointInsideMapBounds(Vector2 point, GameLocation location){
             return location.isTileOnMap(point);
         }
 
@@ -58,12 +57,14 @@ namespace ExpandedFridgeAGAIN
         //* Creates a new inventory menu from a chest with option for showing the color picker.
         public static ItemGrabMenu GetNewItemGrabMenuFromChest(Chest chest, bool showColorPicker)
         {
-            //TODO: Fix missing Colour picker/ Added Junimo button.
-            var igm = new ItemGrabMenu((IList<Item>)chest.Items, false, true, new
-                    InventoryMenu.highlightThisItem(InventoryMenu.highlightAllItems),
-                    new ItemGrabMenu.behaviorOnItemSelect(chest.grabItemFromInventory), (string)null,
-                    new ItemGrabMenu.behaviorOnItemSelect(chest.grabItemFromChest), false, true, true, true, true, 1,
-                    !showColorPicker ? (Item)null : (Item)chest, !showColorPicker ? -1 : 1, (object)chest);
+
+            var igm = new ItemGrabMenu((IList<Item>)chest.Items, false, true,
+                    new InventoryMenu.highlightThisItem(InventoryMenu.highlightAllItems),
+                    new ItemGrabMenu.behaviorOnItemSelect(chest.grabItemFromInventory),
+                    (string)null,new ItemGrabMenu.behaviorOnItemSelect(chest.grabItemFromChest),
+                     false, true, true, true, true, 1,
+                    !showColorPicker ? null : (Item)chest, !showColorPicker ? 0 : 1, (object)chest);
+
             if (igm.chestColorPicker != null)
             {
                 var r = igm.colorPickerToggleButton.bounds;

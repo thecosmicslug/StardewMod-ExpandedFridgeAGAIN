@@ -8,6 +8,7 @@
     <UpdateKeys>GitHub:thecosmicslug/StardewMod-ExpandedFridgeAGAIN</UpdateKeys>
     <UniqueId>TheCosmicSlug.ExpandedFridgeAGAIN</UniqueId>
     <GamePath>/opt/Steam/steamapps/common/Stardew Valley/</GamePath>
+    <EnableHarmony>true</EnableHarmony>
     <BaseManifest>new</BaseManifest>
     <Version_AppendConfiguration>false</Version_AppendConfiguration>
     <MinimumApiVersion>auto</MinimumApiVersion>

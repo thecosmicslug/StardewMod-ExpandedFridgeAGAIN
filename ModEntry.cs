@@ -6,6 +6,11 @@ using System.Reflection;
 using System.Globalization;
 using System.Collections.Generic;
 
+using HarmonyLib;
+using StardewValley;
+using StardewValley.Objects;
+using StardewValley.Menus;
+
 namespace ExpandedFridgeAGAIN
 {
     //* The entry point of the mod handled by SMAPI.
@@ -75,6 +80,8 @@ namespace ExpandedFridgeAGAIN
 
             //* Check for incompatible mods.
             //TODO: Check for more incompatible mods.
+            // ExpandedStorage ??
+            // ColouredChests ??
             bool BetterChestsLoaded = Helper.ModRegistry.IsLoaded("furyx639.BetterChests");
             if (BetterChestsLoaded){
                 DebugLog(Helper.Translation.Get("Debug.BetterChestsDetected"), LogLevel.Warn);
@@ -98,13 +105,27 @@ namespace ExpandedFridgeAGAIN
                 DebugLog(Helper.Translation.Get("Debug.KeySetTo", new { option = "LastFridgeTabButton" }) + Config.LastFridgeTabButton.ToString() + ".", LogLevel.Info);
 
             }
+
+            //*Setup Harmony Hook
+            var harmony = new Harmony(this.ModManifest.UniqueID);
+            try
+            {
+                DebugLog("Setting up Harmony Patch..");
+                _ = harmony.Patch(
+                    AccessTools.Method(typeof(ItemGrabMenu), nameof(ItemGrabMenu.CanHaveColorPicker)),
+                    postfix: new HarmonyMethod(typeof(ModEntry), nameof(ItemGrabMenu_CanHaveColorPicker_postfix)));
+            }
+            catch (Exception)
+            {
+                DebugLog("Failed to apply patches", LogLevel.Error);
+            }
   
             //* Start FridgeManager once we are all setup & before the start of the first day.
             FridgeManager = new FridgeManager(_instance);
 
             //* Debug Commands
-            Helper.ConsoleCommands.Add("FridgeExpandedAGAIN_ShowFridges", "Moves all mini-fridges back into the cabins.", this.DebugRestoreAllFridges);
-            Helper.ConsoleCommands.Add("FridgeExpandedAGAIN_HideFridges", "Moves all mini-fridges out of view.", this.DebugHideAllFridges);
+            Helper.ConsoleCommands.Add("FridgeExpanded_ShowFridges", "Moves all mini-fridges back into the cabins.", this.DebugRestoreAllFridges);
+            Helper.ConsoleCommands.Add("FridgeExpanded_HideFridges", "Moves all mini-fridges out of view.", this.DebugHideAllFridges);
         }
 
         //* The method invoked when we detect configuration changes.
@@ -155,6 +176,16 @@ namespace ExpandedFridgeAGAIN
             return default;
         }
 
+    private static void ItemGrabMenu_CanHaveColorPicker_postfix(ItemGrabMenu __instance, ref bool __result)
+    {
+        // Taken from ColorfulChests
+        if (!__result &&
+            __instance.sourceItem is Chest { playerChest.Value: true } chest &&
+            Game1.bigCraftableData.TryGetValue(chest.ItemId, out var bigCraftableData))
+        {
+            __result = true;
+        }
+    }
         //* Prints message in console log with given log level if enabled.
         public static void DebugLog(string message, LogLevel level = LogLevel.Debug)
         {
