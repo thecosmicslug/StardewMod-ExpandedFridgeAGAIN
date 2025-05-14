@@ -3,7 +3,7 @@ This project was forked from [https://github.com/Uwazouri/ExpandedFridge]
 
 It now fully supports multiplayer & ginger island content,
 
-I've added GenericModConfigMenu support, 
+I've added `GenericModConfigMenu` support to make managing the settings easier, 
 
 and it also contains UI Scale fix from 'SampaioTS' 
 
@@ -14,16 +14,16 @@ Access mini fridges through the kitchen fridge using inventory tabs.
 
 Simply place mini fridges in a farm house or cabin with a kitchen and they will be accessible from the kitchen fridge.
 
-The next day you will find your placed mini fridges moved away from your living space.
+by default the next day you will find your placed mini fridges moved away from your living space. This can be disabled in the `config.json` or through `GenericModConfigMenu`.
 
-(They are placed in the first found free tiles within the house when the day ends so if the mod stops working you should still have your stuff!)
+SMAPI debug commands `FridgeExpanded_ShowFridges` and  `FridgeExpanded_HideFridges` are available if they get stuck.
 
-It should also work in multiplayer.
+It should also work fine in multiplayer mode.
 
 
 ## Requirements:
-- SMAPI 4.0+
-- Stardew Valley 1.6+
+- `SMAPI 4.0+`
+- `Stardew Valley 1.6+`
 
 
 ## In-Game Instructions:
@@ -33,26 +33,14 @@ Open the kitchen fridge to access any mini fridges in the location.
 
 Use inventory tabs, mouse scroll wheel or game-pad shoulder triggers to switch between inventory pages (mini fridges).
 
-(Optional) All mini fridges are moved in and out of the map bounds when day has started/before ending (on by default).
+(Optional) - All mini fridges are moved in and out of the map bounds when day has started/before ending (on by default).
 
-(Optional) Edit the "config.json" file in the "ExpandedFridgeAGAIN" folder to set hotkeys or hide mini fridges option.
-
-(for keybindings and regarding the config file, see https://stardewvalleywiki.com/Modding:Player_Guide/Key_Bindings)
-
-
-## Install Instructions:
-- Download and extract the "Expanded Fridge Files" zip file into a new folder.
-- Copy the "ExpandedFridgeAGAIN" folder from the new folder into your Stardew Valley mods folder.
-- Done!
-
-
-## Uninstall Instructions:
-- Go to your Stardew Valley mods folder.
-- Delete the "ExpandedFridgeAGAIN" folder.
-- Done!
+(Optional) - Edit the "config.json" file in the "ExpandedFridgeAGAIN" folder to set hotkeys or hide mini fridges option.
 
 
 ## Change log:
+- 3.2.4 ﻿- Fixes the colour picker for mini-fridges. corrects a typo in the debug commands.
+- 3.2.3 ﻿- Fixes the stuck fridges issue. Added commands FridgeExpanded_ShowFridges, FridgeExpanded_HideFridges.
 - 3.2.2 ﻿- Added Japanese & Brazilian Portuguese translations. improved build process.
 - 3.2.1 ﻿- small bugfixes.
 - 3.2.0 ﻿- Recompiled & fixed for SDV 1.6
