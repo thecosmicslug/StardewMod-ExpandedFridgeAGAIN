@@ -128,14 +128,14 @@ namespace ExpandedFridgeAGAIN
                 OnFridgeOpened(e.NewMenu as ItemGrabMenu);
         }
 
-        //* Move mini fridges out of reach if option and master game.
         private void OnDayStarted(object sender, DayStartedEventArgs e){
 
+            //* Move mini fridges out of reach if option and master game.
             if (Game1.IsMasterGame && _entry.Config.HideMiniFridges){
                 ModEntry.DebugLog("OnDayStarted(): Hiding mini-fridges from view.");
                 MoveAllMiniFridges(true);
-            }else{
-                //* Restore out of bounds mini-fridges that might have got stuck.
+            //* Restore out of bounds mini-fridges that might have got stuck.
+            }else if (Game1.IsMasterGame && !_entry.Config.HideMiniFridges){
                 ModEntry.DebugLog("OnDayStarted(): Checking for mini-fridges out of bounds..");
                 MoveAllMiniFridges(false);
             }
